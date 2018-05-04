@@ -1,0 +1,5 @@
+Pillow
+torch>=0.3
+tabulate
+tqdm
+cv2

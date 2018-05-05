@@ -1,16 +1,22 @@
 import os
+import torch
 import numpy as np
 from PIL import Image
 from itertools import chain
+from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 
 class NutritionDataset(Dataset):
     def __init__(
         self, image_dir, bounding_boxes_path,
-        data_path, split='train', shrink_factor=(4, 4)
+        data_path, split='train', shrink_factor=(2, 2),
+        debug=True
     ):
         self.cur_split_images = np.load(data_path).item()[split]
-        self.images = [os.path.join(image_dir, f) for f in self.cur_split_images]
+        if debug:
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:5]]
+        else:
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images]
         self.bounding_boxes = np.load(bounding_boxes_path).item()
         self.shrink_factor = shrink_factor
 
@@ -24,7 +30,10 @@ class NutritionDataset(Dataset):
             resample=Image.BILINEAR
         )
         y = self._create_yolo_target_tensor(idx)
-        return image, y
+        transform = transforms.Compose([
+            transforms.ToTensor()
+        ])
+        return transform(image), y
 
     def _create_yolo_target_tensor(self, idx):
         nutrition, ingridients, _ = self.bounding_boxes[self.cur_split_images[idx]]
@@ -65,7 +74,7 @@ def create_target_tensor(nutrition, ingridients, w, h, S=5):
                 target_tensor[i, j, 1, 0] = 1
                 target_tensor[i, j, 1, 1:-2] = ingr_t
                 target_tensor[i, j, 1, -1] = 1
-    return target_tensor
+    return torch.FloatTensor(target_tensor)
 
 def get_bbox_center(coords):
     x = sum([t[0] for t in coords])//4
@@ -87,8 +96,8 @@ def linearly_scale_bounding_boxes(
 ):
     nutrition_coords = [(
             int(nutrition[i])/shrink_factor_w, int(nutrition[i+1])/shrink_factor_h
-        ) for i in xrange(0, len(nutrition), 2)]
+        ) for i in range(0, len(nutrition), 2)]
     ingridients_coords = [(
             int(ingridients[i])/shrink_factor_w, int(ingridients[i+1])/shrink_factor_h
-        ) for i in xrange(0, len(ingridients), 2)]
+        ) for i in range(0, len(ingridients), 2)]
     return (nutrition_coords, ingridients_coords)

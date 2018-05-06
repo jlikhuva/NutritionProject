@@ -10,23 +10,34 @@ else:
     device = torch.device('cpu')
 dtype=torch.float32
 
-def train_localizer(model, optimizer, data_loader, epochs=1):
+def train_localizer(model, optimizer, data_loader, epochs=100):
+    losses = []
     model = model.to(device)
     for e in range(epochs):
         for train_batch, labels_batch in data_loader:
             x = train_batch.to(device=device, dtype=dtype)
             y = labels_batch.to(device=device, dtype=dtype)
-            scores = model(x)
-            print(scores[0])
+            y_hat = model(x)
 
-            # loss = calculate_loss(x, y)
-            # optimizer.zero_grad()
-            # loss.backward()
-            # optimizer.step()
+            loss = calculate_loss(y_hat, y)
+            if e % 10 == 0:
+                print("Loss = ", loss.item())
+            losses.append(loss.item())
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+    return losses, y_hat, y
 
-def calculate_loss(x, y):
+def calculate_loss(y_hat, y):
     '''
-        x - NCHW
+        y_hat 550
         y - 550 {5x5x2x11}
     '''
-    raise NotImplementedError
+    loss = torch.nn.MSELoss()
+    return loss(y_hat, y.view(y.shape[0], -1))
+
+def calculate_map(y_hat, y):
+    pass
+
+def calculate_iou(y_hat, y):
+    pass

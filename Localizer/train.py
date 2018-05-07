@@ -92,13 +92,13 @@ def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.5):
             get_precision(ingridient_preds, ingridient_truth)
         )
     else:
-        nutr_precision, ingr_precision = 0, 0
+        nutr_precision, ingr_precision = np.zeros(4), np.zeros(4)
     return (nutr_precision + ingr_precision) / 2
 
 
 def get_precision(y_hat, y, iou_threshold=[0.5, 0.6, 0.7, 0.8]):
     N = len(y_hat); true_positives = np.zeros(len(iou_threshold))
-    if N == 0: return 0
+    if N == 0: true_positives
     for i in range(N):
         iou = calculate_iou(y_hat[i, 1:9], y[i, 1:9])
         for i in range(len(iou_threshold)):

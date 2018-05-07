@@ -55,7 +55,7 @@ def check_perf_on_dev(data_loader, model):
             losses.append(loss.item())
             d_map = calculate_map(y_hat, y)
             maps.append(d_map)
-    return np.mean(losses), np.mean(maps)
+    return np.mean(losses), np.mean(maps, axis=0)
 
 
 def calculate_loss(y_hat, y, lambdah=1):
@@ -67,7 +67,7 @@ def calculate_loss(y_hat, y, lambdah=1):
     return lambdah*loss(y_hat, y.view(y.shape[0], -1))
 
 
-def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.8):
+def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.5):
     '''
     y_hat is the predicted tensor
     y is the ground truth tensor.
@@ -96,12 +96,13 @@ def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.8):
     return (nutr_precision + ingr_precision) / 2
 
 
-def get_precision(y_hat, y, iou_threshold=0.8):
-    N = len(y_hat); true_positives = 0
+def get_precision(y_hat, y, iou_threshold=[0.5, 0.6, 0.7, 0.8]):
+    N = len(y_hat); true_positives = np.zeros(len(iou_threshold))
     if N == 0: return 0
     for i in range(N):
         iou = calculate_iou(y_hat[i, 1:9], y[i, 1:9])
-        if iou >= iou_threshold: true_positives += 1
+        for i in range(len(iou_threshold)):
+            if iou >= iou_threshold[i]: true_positives[i] += 1
     return true_positives / N
 
 

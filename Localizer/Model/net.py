@@ -35,6 +35,7 @@ class LocalizerNet(nn.Module):
             padding=0, stride=1
         )
         self.bottle_neck_batchnorm4 = nn.BatchNorm2d(64)
+        self.dropout4 = nn.Dropout(p=0.3)
         self.pool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv5 = nn.Conv2d(
@@ -42,6 +43,7 @@ class LocalizerNet(nn.Module):
             padding=1, stride=1
         )
         self.conv5_batchnorm = nn.BatchNorm2d(128)
+        self.dropout5 = nn.Dropout(p=0.3)
         self.pool5 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv6 = nn.Conv2d(
@@ -49,6 +51,7 @@ class LocalizerNet(nn.Module):
             padding=1, stride=1
         )
         self.conv6_batchnorm = nn.BatchNorm2d(32)
+        self.dropout6 = nn.Dropout(p=0.3)
         self.pool6 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # self.conv7 = nn.Conv2d(
@@ -63,6 +66,7 @@ class LocalizerNet(nn.Module):
             padding=0, stride=1
         )
         self.bottle_neck_batchnorm8 = nn.BatchNorm2d(8)
+        self.dropout8 = nn.Dropout(p=0.3)
 
         self.fc = nn.Linear(64320, 550)
 
@@ -79,21 +83,24 @@ class LocalizerNet(nn.Module):
         # Fine Tuning       #
         ####################
         out = F.relu(
-            self.bottle_neck_batchnorm4(
-                self.bottle_neck_conv4(out)
-        ))
+            self.dropout4(
+                self.bottle_neck_batchnorm4(
+                    self.bottle_neck_conv4(out)
+        )))
         out = self.pool4(out)
 
         out = F.relu(
-            self.conv5_batchnorm(
-                self.conv5(out)
-        ))
+            self.dropout5(
+                self.conv5_batchnorm(
+                    self.conv5(out)
+        )))
         out = self.pool5(out)
 
         out = F.relu(
-            self.conv6_batchnorm(
-                self.conv6(out)
-        ))
+            self.dropout6(
+                self.conv6_batchnorm(
+                    self.conv6(out)
+        )))
         out = self.pool6(out)
 
         # out = F.relu(
@@ -103,9 +110,10 @@ class LocalizerNet(nn.Module):
         # out = self.pool7(out)
 
         out = F.relu(
-            self.bottle_neck_batchnorm8(
-                self.bottle_neck_conv8(out)
-        ))
+            self.dropout8(
+                self.bottle_neck_batchnorm8(
+                    self.bottle_neck_conv8(out)
+        )))
 
         #######
         # FC  #

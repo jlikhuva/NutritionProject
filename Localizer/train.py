@@ -25,7 +25,7 @@ def train_localizer(
             y_hat = model(x)
 
             loss = calculate_loss(y_hat, y)
-            if e % 10 == 0:
+            if (e+1) % 10 == 0:
                 with torch.no_grad():
                     d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                     map_ = calculate_map(y_hat, y)
@@ -106,7 +106,7 @@ def get_precision(y_hat, y, iou_threshold=[0.5, 0.6, 0.7, 0.8]):
     return true_positives / N
 
 
-def calculate_iou(y_pred, y_truth, h=960, w=540):
+def calculate_iou(y_pred, y_truth, h=1920/4, w=1080/4):
     '''
      y and y_h are 8-tensors
      in which each number holds true universal meaning.

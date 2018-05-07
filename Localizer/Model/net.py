@@ -45,26 +45,26 @@ class LocalizerNet(nn.Module):
         self.pool5 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv6 = nn.Conv2d(
-            128, 256, kernel_size=3,
+            128, 32, kernel_size=3,
             padding=1, stride=1
         )
-        self.conv6_batchnorm = nn.BatchNorm2d(256)
+        self.conv6_batchnorm = nn.BatchNorm2d(32)
         self.pool6 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.conv7 = nn.Conv2d(
-            256, 512, kernel_size=3,
-            padding=1, stride=1
-        )
-        self.conv7_batchnorm = nn.BatchNorm2d(512)
-        self.pool7 = nn.MaxPool2d(kernel_size=2, stride=2)
+        # self.conv7 = nn.Conv2d(
+        #     256, 512, kernel_size=3,
+        #     padding=1, stride=1
+        # )
+        # self.conv7_batchnorm = nn.BatchNorm2d(512)
+        # self.pool7 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.bottle_neck_conv8 = nn.Conv2d(
-            512, 32, kernel_size=1,
+            32, 8, kernel_size=1,
             padding=0, stride=1
         )
-        self.bottle_neck_batchnorm8 = nn.BatchNorm2d(32)
+        self.bottle_neck_batchnorm8 = nn.BatchNorm2d(8)
 
-        self.fc = nn.Linear(63360, 550)
+        self.fc = nn.Linear(64320, 550)
 
 
     def forward(self, x):
@@ -96,11 +96,11 @@ class LocalizerNet(nn.Module):
         ))
         out = self.pool6(out)
 
-        out = F.relu(
-            self.conv7_batchnorm(
-                self.conv7(out)
-        ))
-        out = self.pool7(out)
+        # out = F.relu(
+        #     self.conv7_batchnorm(
+        #         self.conv7(out)
+        # ))
+        # out = self.pool7(out)
 
         out = F.relu(
             self.bottle_neck_batchnorm8(

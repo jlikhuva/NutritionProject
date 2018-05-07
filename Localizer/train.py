@@ -13,7 +13,7 @@ dtype=torch.float32
 
 def train_localizer(
     model, optimizer, train_data_loader,
-    dev_data_loader, epochs=5
+    dev_data_loader, epochs=100
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
     best_map = -1
@@ -25,18 +25,19 @@ def train_localizer(
             y_hat = model(x)
 
             loss = calculate_loss(y_hat, y)
-            map_ = calculate_map(y_hat, y)
-            if e % 1 == 0:
-                d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
-                print("=== Performance Check ===")
-                print("\t Train Loss = ", loss.item())
-                print("\t Dev Loss = ", d_loss)
-                print("\t Train mAP = ", map_)
-                print("\t Dev mAP = ", d_map)
-                dev_losses.append(d_loss)
-                dev_map.append(d_map)
+            if e % 10 == 0:
+                with torch.no_grad():
+                    d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
+                    map_ = calculate_map(y_hat, y)
+                    print("=== Performance Check ===")
+                    print("\t Train Loss = ", loss.item())
+                    print("\t Dev Loss = ", d_loss)
+                    print("\t Train mAP = ", map_)
+                    print("\t Dev mAP = ", d_map)
+                    dev_losses.append(d_loss)
+                    dev_map.append(d_map)
+                    train_map.append(map_)
             train_losses.append(loss.item())
-            train_map.append(map_)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -45,18 +46,19 @@ def train_localizer(
 
 def check_perf_on_dev(data_loader, model):
     losses=[]; maps = []
-    for x, y in data_loader:
-        x = x.to(device=device, dtype=dtype)
-        y = y.to(device=device, dtype=dtype)
-        y_hat=model(x)
-        loss=calculate_loss(y_hat, y)
-        losses.append(loss.item())
-        d_map = calculate_map(y_hat, y)
-        maps.append(d_map)
+    with torch.no_grad():
+        for x, y in data_loader:
+            x = x.to(device=device, dtype=dtype)
+            y = y.to(device=device, dtype=dtype)
+            y_hat=model(x)
+            loss=calculate_loss(y_hat, y)
+            losses.append(loss.item())
+            d_map = calculate_map(y_hat, y)
+            maps.append(d_map)
     return np.mean(losses), np.mean(maps)
 
 
-def calculate_loss(y_hat, y, lambdah=5):
+def calculate_loss(y_hat, y, lambdah=1):
     '''
         y_hat 550
         y - 550 {5x5x2x11}
@@ -96,6 +98,7 @@ def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.8):
 
 def get_precision(y_hat, y, iou_threshold=0.8):
     N = len(y_hat); true_positives = 0
+    if N == 0: return 0
     for i in range(N):
         iou = calculate_iou(y_hat[i, 1:9], y[i, 1:9])
         if iou >= iou_threshold: true_positives += 1

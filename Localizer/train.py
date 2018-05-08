@@ -1,7 +1,9 @@
+import sys
 import torch
 import numpy as np
+sys.path.append("..")
 import torch.nn.functional as F
-
+from Shared import utils
 # from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from Model.dataloader import NutritionDataset
@@ -12,13 +14,14 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 dtype=torch.float32
+LARGE_NUMBER = 1e5
 
 def train_localizer(
     model, optimizer, train_data_loader,
     dev_data_loader, epochs=1
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
-    best_map = -1
+    best_loss = LARGE_NUMBER
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
 
@@ -45,6 +48,12 @@ def train_localizer(
         print("\t Dev Loss = ", d_loss)
         print("\t Train mAP = ", map_)
         print("\t Dev mAP = ", d_map)
+        with torch.no_grad():
+            if d_loss < best_loss:
+                utils.save_checkpoint({
+                    'epoch' : e+1, 'state_dict' : model.state_dict(),
+                    "optim_dict" : optimizer.state_dict()
+                })
     return train_losses, dev_losses, train_map, dev_map
 
 

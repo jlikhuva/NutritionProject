@@ -73,13 +73,26 @@ def check_perf_on_dev(data_loader, model):
     return np.mean(losses), np.mean(maps, axis=0)
 
 
-def calculate_loss(y_hat, y, lambdah=5):
+def calculate_loss(y_hat, y, lambdah=5, S=5, B=2, K=11):
     '''
         y_hat 550
-        y - 550 {5x5x2x11}
+        y - 550 {N x 5x5x2x11}
     '''
+    N = y.shape[0]
+    # y = y.reshape(N, S*S*B, K)
+    # y_hat = y_hat.reshape(N, S*S*B, K)
     loss = torch.nn.MSELoss()
-    return lambdah*loss(y_hat, y.view(y.shape[0], -1))
+    # object_loss = torch.nn.BCEWithLogitsLoss()
+    # class_loss = torch.nn.CrossEntropyLoss()
+
+    # a = object_loss(y_hat[:, :, 0], y[:, :, 0])
+    # b = lambdah*loss(y_hat[:, :, 1:9], y[:, :, 1:9])
+    # c = class_loss(
+    #     y_hat[:, :, 9:].reshape(N*S*S, 100),
+    #     y[:, :, 9:].type(torch.LongTensor).reshape(N, 100)
+    # )
+
+    return lambdah*loss(y_hat, y.view(N, -1))
 
 
 def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.5):

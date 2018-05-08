@@ -17,6 +17,9 @@ def train_localizer(
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
     best_map = -1
+    if torch.cuda.device_count() > 1:
+        model = torch.nn.DataParallel(model)
+        
     model = model.to(device)
     for e in range(epochs):
         for train_batch, labels_batch in train_data_loader:

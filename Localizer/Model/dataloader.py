@@ -14,7 +14,7 @@ class NutritionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:5]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:10]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:6400]]
         self.bounding_boxes = np.load(bounding_boxes_path).item()
@@ -31,7 +31,7 @@ class NutritionDataset(Dataset):
         )
         y = self._create_yolo_target_tensor(idx)
         transform = transforms.Compose([
-            transforms.ToTensor()
+            transforms.ToTensor(),
         ])
         return transform(image), y
 

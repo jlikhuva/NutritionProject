@@ -28,36 +28,34 @@ def train_localizer(
         model = torch.nn.DataParallel(model)
 
     model = model.to(device)
-    i = 0
-    for _ in range(epochs):
+    for e in range(epochs):
         for train_batch, labels_batch in tqdm(train_data_loader):
             x = train_batch.to(device=device, dtype=dtype)
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
-
             loss = calculate_loss(y_hat, y)
-            with torch.no_grad():
-                if (i+1) % 5 == 0:
-                    d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
-                    map_ = calculate_map(y_hat, y)
-                    dev_losses.append(d_loss)
-                    dev_map.append(d_map)
-                    train_map.append(map_)
-                    train_losses.append(loss.item())
-                    print("=== Performance Check ===")
-                    print("\t Train Loss = ", loss.item())
-                    print("\t Dev Loss = ", d_loss)
-                    print("\t Train mAP = ", map_)
-                    print("\t Dev mAP = ", d_map)
-                    if d_loss < best_loss:
-                        utils.save_checkpoint({
-                            'epoch' : i+1, 'state_dict' : model.state_dict(),
-                            "optim_dict" : optimizer.state_dict()
-                        })
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-	i += 1
+
+        with torch.no_grad():
+            if (e+1) % 5 == 0:
+                d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
+                map_ = calculate_map(y_hat, y)
+                dev_losses.append(d_loss)
+                dev_map.append(d_map)
+                train_map.append(map_)
+                train_losses.append(loss.item())
+                print("=== Performance Check ===")
+                print("\t Train Loss = ", loss.item())
+                print("\t Dev Loss = ", d_loss)
+                print("\t Train mAP = ", map_)
+                print("\t Dev mAP = ", d_map)
+                if d_loss < best_loss:
+                    utils.save_checkpoint({
+                        'epoch' : e+1, 'state_dict' : model.state_dict(),
+                        "optim_dict" : optimizer.state_dict()
+                    })
     return train_losses, dev_losses, train_map, dev_map
 
 

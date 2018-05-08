@@ -55,7 +55,7 @@ class LocalizerNet(nn.Module):
             padding=1, stride=1
         )
         self.conv6_batchnorm = nn.BatchNorm2d(128)
-        self.dropout6 = nn.Dropout(p=0.0)
+        self.dropout6 = nn.Dropout(p=p)
         self.pool6 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # self.conv7 = nn.Conv2d(

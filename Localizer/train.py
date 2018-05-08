@@ -2,12 +2,14 @@ import sys
 import torch
 import numpy as np
 sys.path.append("..")
+
 import torch.nn.functional as F
 from Shared import utils
 # from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from Model.dataloader import NutritionDataset
 from Model.net import LocalizerNet
+from tqdm import tqdm
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -26,15 +28,16 @@ def train_localizer(
         model = torch.nn.DataParallel(model)
 
     model = model.to(device)
-    for e in range(epochs):
-        for train_batch, labels_batch in train_data_loader:
+    i = 0
+    for _ in range(epochs):
+        for train_batch, labels_batch in tqdm(train_data_loader):
             x = train_batch.to(device=device, dtype=dtype)
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
 
             loss = calculate_loss(y_hat, y)
             with torch.no_grad():
-                if (e+1) % 1 == 0:
+                if (i+1) % 5 == 0:
                     d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                     map_ = calculate_map(y_hat, y)
                     dev_losses.append(d_loss)
@@ -48,13 +51,13 @@ def train_localizer(
                     print("\t Dev mAP = ", d_map)
                     if d_loss < best_loss:
                         utils.save_checkpoint({
-                            'epoch' : e+1, 'state_dict' : model.state_dict(),
+                            'epoch' : i+1, 'state_dict' : model.state_dict(),
                             "optim_dict" : optimizer.state_dict()
                         })
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
+	i += 1
     return train_losses, dev_losses, train_map, dev_map
 
 

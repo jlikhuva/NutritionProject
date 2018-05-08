@@ -1,6 +1,8 @@
 import torch
 import numpy as np
 import torch.nn.functional as F
+
+# from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from Model.dataloader import NutritionDataset
 from Model.net import LocalizerNet
@@ -19,7 +21,7 @@ def train_localizer(
     best_map = -1
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
-        
+
     model = model.to(device)
     for e in range(epochs):
         for train_batch, labels_batch in train_data_loader:
@@ -31,12 +33,6 @@ def train_localizer(
             with torch.no_grad():
                 d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                 map_ = calculate_map(y_hat, y)
-                if (e+1) % 10 == 0:
-                    print("=== Performance Check ===")
-                    print("\t Train Loss = ", loss.item())
-                    print("\t Dev Loss = ", d_loss)
-                    print("\t Train mAP = ", map_)
-                    print("\t Dev mAP = ", d_map)
                 dev_losses.append(d_loss)
                 dev_map.append(d_map)
                 train_map.append(map_)
@@ -44,6 +40,11 @@ def train_localizer(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+        print("=== Performance Check ===")
+        print("\t Train Loss = ", loss.item())
+        print("\t Dev Loss = ", d_loss)
+        print("\t Train mAP = ", map_)
+        print("\t Dev mAP = ", d_map)
     return train_losses, dev_losses, train_map, dev_map
 
 

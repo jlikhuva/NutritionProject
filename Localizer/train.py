@@ -27,11 +27,11 @@ def train_localizer(
     best_loss = LARGE_NUMBER
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
+    model = model.to(device)
     if restore:
         utils.load_checkpoint(
             restore_path, model, optimizer
         )
-    model = model.to(device)
     for e in range(epochs):
         for train_batch, labels_batch in tqdm(train_data_loader):
             x = train_batch.to(device=device, dtype=dtype)

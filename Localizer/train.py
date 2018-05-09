@@ -20,7 +20,7 @@ LARGE_NUMBER = 1e5
 
 def train_localizer(
     model, optimizer, train_data_loader,
-    dev_data_loader, epochs=1, restore=True,
+    dev_data_loader, epochs=1, restore=False,
     restore_path='../Data/FullData/best_model.tar'
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []

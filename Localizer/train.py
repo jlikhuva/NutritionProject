@@ -9,7 +9,7 @@ from Shared import utils
 from torch.utils.data import Dataset, DataLoader
 from Model.dataloader import NutritionDataset
 from Model.net import LocalizerNet
-from tqdm import tqdm
+from tqdm import tqdm_notebook as tqdm
 
 if torch.cuda.is_available():
     device = torch.device('cuda')

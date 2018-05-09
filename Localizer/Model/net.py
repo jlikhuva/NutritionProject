@@ -11,7 +11,7 @@ class LocalizerNet(nn.Module):
         if config_params:
             p = 1 - config_params['keep_prob']
         else:
-            p = 0.1
+            p = 0.2
 
         ########################
         #  Frozen Layers      #
@@ -138,5 +138,5 @@ class LocalizerNet(nn.Module):
             w = torch.from_numpy(np.array(
                 list((self.yolo_weights['model_weights'][name][name][u'kernel:0']))
             )).permute(3, 2, 0, 1)
-            modules[i].weight = nn.Parameter(w, requires_grad=False)
+            modules[i].weight = nn.Parameter(w, requires_grad=True)
         self.yolo_weights.close()

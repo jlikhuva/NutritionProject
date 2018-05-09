@@ -20,8 +20,9 @@ LARGE_NUMBER = 1e5
 
 def train_localizer(
     model, optimizer, train_data_loader,
-    dev_data_loader, epochs=1, restore=False,
-    restore_path='../Data/FullData/best_model.tar'
+    dev_data_loader, epochs=1, restore=True,
+    restore_path='../Data/FullData/best_model.tar',
+    scheduler=None
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
     best_loss = LARGE_NUMBER
@@ -38,6 +39,9 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
+            if scheduler:
+                scheduler.step(loss.item())
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -60,6 +64,7 @@ def train_localizer(
                         'epoch' : e+1, 'state_dict' : model.state_dict(),
                         "optim_dict" : optimizer.state_dict()
                     })
+                    best_loss = d_loss
     return train_losses, dev_losses, train_map, dev_map
 
 

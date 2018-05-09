@@ -20,13 +20,17 @@ LARGE_NUMBER = 1e5
 
 def train_localizer(
     model, optimizer, train_data_loader,
-    dev_data_loader, epochs=1
+    dev_data_loader, epochs=1, restore=True,
+    restore_path='../Data/FullData/best_model.tar'
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
     best_loss = LARGE_NUMBER
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
-
+    if restore:
+        utils.load_checkpoint(
+            restore_path, model, optimizer
+        )
     model = model.to(device)
     for e in range(epochs):
         for train_batch, labels_batch in tqdm(train_data_loader):
@@ -84,11 +88,11 @@ def calculate_loss(y_hat, y, lambdah=5, S=5, B=2, K=11):
     loss = torch.nn.MSELoss()
     # object_loss = torch.nn.BCEWithLogitsLoss()
     # class_loss = torch.nn.CrossEntropyLoss()
-
+    #
     # a = object_loss(y_hat[:, :, 0], y[:, :, 0])
     # b = lambdah*loss(y_hat[:, :, 1:9], y[:, :, 1:9])
     # c = class_loss(
-    #     y_hat[:, :, 9:].reshape(N*S*S, 100),
+    #     y_hat[:, :, 9:].reshape(N*S*S*B, 2),
     #     y[:, :, 9:].type(torch.LongTensor).reshape(N, 100)
     # )
 

@@ -14,7 +14,7 @@ class NutritionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:2]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:5]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:6400]]
         self.bounding_boxes = np.load(bounding_boxes_path).item()

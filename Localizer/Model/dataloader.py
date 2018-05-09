@@ -16,7 +16,7 @@ class NutritionDataset(Dataset):
         if debug:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:5]]
         else:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:6400]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images]
         self.bounding_boxes = np.load(bounding_boxes_path).item()
         self.shrink_factor = shrink_factor
 

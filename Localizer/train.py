@@ -39,6 +39,7 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
+            # print("Loss = ", loss.item())
             # if scheduler:
             # scheduler.step(loss.item())
 

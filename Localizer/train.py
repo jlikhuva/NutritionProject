@@ -39,6 +39,7 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
+            # train_losses.append(loss.item())
             # print("Loss = ", loss.item())
             # if scheduler:
             # scheduler.step(loss.item())
@@ -55,8 +56,7 @@ def train_localizer(
                 dev_map.append(d_map)
                 train_map.append(map_)
                 train_losses.append(loss.item())
-                if scheduler:
-                    scheduler.step(d_loss)
+
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", d_loss)
@@ -68,6 +68,8 @@ def train_localizer(
                         "optim_dict" : optimizer.state_dict()
                     })
                     best_loss = d_loss
+        if scheduler:
+            scheduler.step()
     return train_losses, dev_losses, train_map, dev_map
 
 

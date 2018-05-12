@@ -52,7 +52,7 @@ class LocalizerNet(nn.Module):
             padding=0, stride=1
         )
         self.bottle_neck_batchnorm4 = nn.BatchNorm2d(32)
-        self.dropout4 = nn.Dropout(p=p)
+        self.dropout4 = nn.Dropout(p=p, inplace=True)
         self.pool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv5 = nn.Conv2d(
@@ -60,7 +60,7 @@ class LocalizerNet(nn.Module):
             padding=1, stride=1
         )
         self.conv5_batchnorm = nn.BatchNorm2d(64)
-        self.dropout5 = nn.Dropout(p=p)
+        self.dropout5 = nn.Dropout(p=p, inplace=True)
         self.pool5 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv6 = nn.Conv2d(
@@ -68,7 +68,7 @@ class LocalizerNet(nn.Module):
             padding=1, stride=1
         )
         self.conv6_batchnorm = nn.BatchNorm2d(128)
-        self.dropout6 = nn.Dropout(p=p)
+        self.dropout6 = nn.Dropout(p=p, inplace=True)
         self.pool6 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # self.conv7 = nn.Conv2d(
@@ -83,7 +83,7 @@ class LocalizerNet(nn.Module):
             padding=0, stride=1
         )
         self.bottle_neck_batchnorm8 = nn.BatchNorm2d(8)
-        self.dropout8 = nn.Dropout(p=p)
+        self.dropout8 = nn.Dropout(p=p, inplace=True)
 
         self.fc = nn.Linear(15840, 550)
 
@@ -144,13 +144,13 @@ class LocalizerNet(nn.Module):
             3, 32, kernel_size=3, padding=1, stride=1,
         )
         self.bn1 = nn.BatchNorm2d(32)
-        self.d1 = nn.Dropout(p=p)
+        self.d1 = nn.Dropout(p=p, inplace=True)
         self.mp1 = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(
             32, 64, kernel_size=3, padding=1, stride=1,
         )
         self.bn2 = nn.BatchNorm2d(64)
-        self.d2 = nn.Dropout(p=p)
+        self.d2 = nn.Dropout(p=p, inplace=True)
         self.mp2 = nn.MaxPool2d(2, 2)
 
         # Block 2 #
@@ -158,17 +158,17 @@ class LocalizerNet(nn.Module):
             64, 128, kernel_size=3, padding=1, stride=1,
         )
         self.bn3 = nn.BatchNorm2d(128)
-        self.d3 = nn.Dropout(p=p)
+        self.d3 = nn.Dropout(p=p, inplace=True)
         self.conv4 = nn.Conv2d(
             128, 64, kernel_size=1, padding=0, stride=1,
         )
         self.bn4 = nn.BatchNorm2d(64)
-        self.d4 = nn.Dropout(p=p)
+        self.d4 = nn.Dropout(p=p, inplace=True)
         self.conv5 = nn.Conv2d(
             64, 128, kernel_size=3, padding=1, stride=1,
         )
         self.bn5 = nn.BatchNorm2d(128)
-        self.d5 = nn.Dropout(p=p)
+        self.d5 = nn.Dropout(p=p, inplace=True)
         self.mp5 = nn.MaxPool2d(2, 2)
 
         # Block 3 #
@@ -176,17 +176,17 @@ class LocalizerNet(nn.Module):
             128, 256, kernel_size=3, padding=1, stride=1
         )
         self.bn6 = nn.BatchNorm2d(256)
-        self.d6 = nn.Dropout(p=p)
+        self.d6 = nn.Dropout(p=p, inplace=True)
         self.conv7 = nn.Conv2d(
             256, 128, kernel_size=1, padding=0, stride=1
         )
         self.bn7 = nn.BatchNorm2d(128)
-        self.d7 = nn.Dropout(p=p)
+        self.d7 = nn.Dropout(p=p, inplace=True)
         self.conv8 = nn.Conv2d(
             128, 256, kernel_size=3, padding=1, stride=1
         )
         self.bn8 = nn.BatchNorm2d(256)
-        self.d8 = nn.Dropout(p=p)
+        self.d8 = nn.Dropout(p=p, inplace=True)
         self.mp8 = nn.MaxPool2d(2, 2)
 
         # Block 4 #
@@ -194,27 +194,27 @@ class LocalizerNet(nn.Module):
             256, 512, kernel_size=3, padding=1, stride=1
         )
         self.bn9 = nn.BatchNorm2d(512)
-        self.d9 = nn.Dropout(p=p)
+        self.d9 = nn.Dropout(p=p, inplace=True)
         self.conv10 = nn.Conv2d(
             512, 256, kernel_size=1, padding=0, stride=1
         )
         self.bn10 = nn.BatchNorm2d(256)
-        self.d10 = nn.Dropout(p=p)
+        self.d10 = nn.Dropout(p=p, inplace=True)
         self.conv11 = nn.Conv2d(
             256, 512, kernel_size=3, padding=1, stride=1
         )
         self.bn11 = nn.BatchNorm2d(512)
-        self.d11 = nn.Dropout(p=p)
+        self.d11 = nn.Dropout(p=p, inplace=True)
         self.conv12 = nn.Conv2d(
             512, 256, kernel_size=1, padding=0, stride=1
         )
         self.bn12 = nn.BatchNorm2d(256)
-        self.d12 = nn.Dropout(p=p)
+        self.d12 = nn.Dropout(p=p, inplace=True)
         self.conv13 = nn.Conv2d(
             256, 512, kernel_size=3, padding=1, stride=1
         )
         self.bn13 = nn.BatchNorm2d(512)
-        self.d13 = nn.Dropout(p=p)
+        self.d13 = nn.Dropout(p=p, inplace=True)
         self.mp13 = nn.MaxPool2d(2, 2)
 
         # Output Layer. #

@@ -11,7 +11,7 @@ class LocalizerNet(nn.Module):
         if config_params:
             self.p = 1 - config_params['keep_prob']
         else:
-            self.p = 0.2
+            self.p = 0.3
         self.use_full_yolo = use_full_yolo
         if use_full_yolo:
             self._init_full_yolo()

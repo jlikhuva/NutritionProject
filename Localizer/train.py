@@ -96,7 +96,7 @@ def calculate_loss(y_hat, y, lambdah=1, S=5, B=2, K=11):
     y = y.reshape(N, S*S*B, K)
     y_hat = y_hat.reshape(N, S*S*B, K)
 
-    object_mask = y[:, :, :, :, 0] == 1
+    object_mask = y[:, :, 0] == 1
     y_hat = y_hat[object_mask]
     y = y[object_mask]
 

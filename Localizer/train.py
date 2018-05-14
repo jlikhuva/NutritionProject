@@ -95,18 +95,20 @@ def calculate_loss(y_hat, y, lambdah=1, S=5, B=2, K=11):
     N = y.shape[0]
     y = y.reshape(N, S*S*B, K)
     y_hat = y_hat.reshape(N, S*S*B, K)
+
+    object_mask = y[:, :, :, :, 0] == 1
+    y_hat = y_hat[object_mask]
+    y = y[object_mask]
+
     loss = torch.nn.MSELoss()
     object_loss = torch.nn.BCEWithLogitsLoss()
-    # class_loss = torch.nn.CrossEntropyLoss()
-    #
+
+
     a = object_loss(y_hat[:, :, 0], y[:, :, 0])
     b = lambdah*loss(y_hat[:, :, 1:9], y[:, :, 1:9])
     c1 = object_loss(y_hat[:, :, -2], y[:, :, -2])
     c2 = object_loss(y_hat[:, :, -1], y[:, :, -1])
-    # c = class_loss(
-    #     y_hat[:, :, 9:].reshape(N*S*S*B, 2),
-    #     y[:, :, 9:].type(torch.LongTensor).reshape(N, 100)
-    # )
+
     return a + b + c1 + c2
     # return lambdah*loss(y_hat, y.view(N, -1))
 
@@ -120,16 +122,16 @@ def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.5):
     y_hat = y_hat.reshape(N, S, S, B, K)
     y = y.reshape(N, S, S, B, K)
 
-    pred_mask = y_hat[:, :, :, :, 0] > threshold
+    pred_mask = y_hat[:, :, :, :, 0] >= threshold
     preds = y_hat[pred_mask]
     if len(preds) > 0:
         truth = y[pred_mask]
 
-        nutrition_preds = preds[preds[:, -2] > threshold]
-        nutrition_truth = truth[preds[:, -2] > threshold]
+        nutrition_preds = preds[preds[:, -2] >= threshold]
+        nutrition_truth = truth[preds[:, -2] >= threshold]
 
-        ingridient_preds = preds[preds[:, -1] > threshold]
-        ingridient_truth = truth[preds[:, -1] > threshold]
+        ingridient_preds = preds[preds[:, -1] >= threshold]
+        ingridient_truth = truth[preds[:, -1] >= threshold]
 
         nutr_precision, ingr_precision = (
             get_precision(nutrition_preds, nutrition_truth),

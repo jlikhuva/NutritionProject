@@ -61,16 +61,21 @@ def create_target_tensor(nutrition, ingridients, w, h, S=5):
     nutr_t = np.array(
         list(chain.from_iterable(nutrition))
     )
+    ing_found, nut_found = False, False
     for i in range(S):
         for j in range(S):
             start = (i*cell_w, j*cell_h)
             nutr_in_cell = center_in_cell(nutr_center, start, cell_w, cell_h)
             ingr_in_cell = center_in_cell(ingr_center, start, cell_w, cell_h)
-            if nutr_in_cell:
+            if nutr_in_cell and not nut_found:
+                nut_found = True
+                # print("\t Found Nutrition")
                 target_tensor[i, j, 0, 0] = 1
                 target_tensor[i, j, 0, 1:-2] = nutr_t
                 target_tensor[i, j, 0, -2] = 1
-            if ingr_in_cell:
+            if ingr_in_cell and not ing_found:
+                ing_found = True
+                # print("\t Found ingridients")
                 target_tensor[i, j, 1, 0] = 1
                 target_tensor[i, j, 1, 1:-2] = ingr_t
                 target_tensor[i, j, 1, -1] = 1

@@ -55,7 +55,7 @@ def train_localizer(
                 dev_losses.append(d_loss)
                 dev_map.append(d_map)
                 train_map.append(map_)
-                #train_losses.append(loss.item())
+                # train_losses.append(loss.item())
 
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())
@@ -87,7 +87,7 @@ def check_perf_on_dev(data_loader, model):
     return np.mean(losses), np.mean(maps, axis=0)
 
 
-def calculate_loss(y_hat, y, lambdah=1, S=5, B=2, K=11):
+def calculate_loss(y_hat, y, lambdah=0.5, S=5, B=2, K=11):
     '''
         y_hat 550
         y - 550 {N x 5x5x2x11}
@@ -96,20 +96,25 @@ def calculate_loss(y_hat, y, lambdah=1, S=5, B=2, K=11):
     y = y.reshape(N, S*S*B, K)
     y_hat = y_hat.reshape(N, S*S*B, K)
 
-    object_mask = y[:, :, 0] == 1
+    no_object_mask = (y[:, :, 0] != 1)
+    y_no_obj = y[no_object_mask]
+    y_hat_no_obj = y_hat[no_object_mask]
+
+    object_mask = (y[:, :, 0] == 1)
     y_hat = y_hat[object_mask]
     y = y[object_mask]
+    # print(y, y_hat.shape)
 
     loss = torch.nn.MSELoss()
     object_loss = torch.nn.BCEWithLogitsLoss()
 
+    a = object_loss(y_hat[:, 0], y[:, 0])
+    b = loss(y_hat[:, 1:9], y[:, 1:9])
+    c1 = object_loss(y_hat[:, -2], y[:, -2])
+    c2 = object_loss(y_hat[:, -1], y[:, -1])
+    d =  lambdah*object_loss(y_hat_no_obj[:, 0], y_no_obj[:, 0])
 
-    a = object_loss(y_hat[:, :, 0], y[:, :, 0])
-    b = lambdah*loss(y_hat[:, :, 1:9], y[:, :, 1:9])
-    c1 = object_loss(y_hat[:, :, -2], y[:, :, -2])
-    c2 = object_loss(y_hat[:, :, -1], y[:, :, -1])
-
-    return a + b + c1 + c2
+    return a + b + c1 + c2 + d
     # return lambdah*loss(y_hat, y.view(N, -1))
 
 

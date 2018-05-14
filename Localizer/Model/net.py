@@ -11,7 +11,7 @@ class LocalizerNet(nn.Module):
         if config_params:
             self.p = 1 - config_params['keep_prob']
         else:
-            self.p = 0.3
+            self.p = 0.1
         self.use_full_yolo = use_full_yolo
         if use_full_yolo:
             self._init_full_yolo()
@@ -214,7 +214,7 @@ class LocalizerNet(nn.Module):
             256, 512, kernel_size=3, padding=1, stride=1
         )
         self.bn13 = nn.BatchNorm2d(512)
-        self.d13 = nn.Dropout(p=p, inplace=True)
+        self.d13 = nn.Dropout(p=0, inplace=True)
         self.mp13 = nn.MaxPool2d(2, 2)
 
         # Output Layer. #

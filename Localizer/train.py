@@ -39,7 +39,7 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
-            train_losses.append(loss.item())
+            #train_losses.append(loss.item())
             # print("Loss = ", loss.item())
             # if scheduler:
             # scheduler.step(loss.item())
@@ -49,13 +49,13 @@ def train_localizer(
             optimizer.step()
 
         with torch.no_grad():
-            if (e+1) % 5 == 0:
+            if (e+1) % 2 == 0:
                 d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                 map_ = calculate_map(y_hat, y)
                 dev_losses.append(d_loss)
                 dev_map.append(d_map)
                 train_map.append(map_)
-                # train_losses.append(loss.item())
+                train_losses.append(loss.item())
 
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())

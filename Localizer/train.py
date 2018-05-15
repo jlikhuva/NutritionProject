@@ -49,7 +49,7 @@ def train_localizer(
             optimizer.step()
 
         with torch.no_grad():
-            if (e+1) % 5 == 0:
+            if (e+1) % 2 == 0:
                 d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                 map_ = calculate_map(y_hat, y)
                 dev_losses.append(d_loss)

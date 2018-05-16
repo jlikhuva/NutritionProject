@@ -16,7 +16,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 dtype=torch.float32
-LARGE_NUMBER = 1e5
+LARGE_NUMBER = 0.4216845867962673
 
 def train_localizer(
     model, optimizer, train_data_loader,
@@ -45,7 +45,7 @@ def train_localizer(
             optimizer.step()
 
         with torch.no_grad():
-            if (e+1) % 10 == 0:
+            if (e+1) % 5 == 0:
                 d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                 map_ = calculate_map(y_hat, y)
                 dev_losses.append(d_loss)

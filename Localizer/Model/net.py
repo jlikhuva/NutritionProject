@@ -11,7 +11,7 @@ class LocalizerNet(nn.Module):
         if config_params:
             self.p = 1 - config_params['keep_prob']
         else:
-            self.p = 0.3
+            self.p = 0.0
         self.use_full_yolo = use_full_yolo
         if use_full_yolo:
             self._init_full_yolo()
@@ -195,21 +195,21 @@ class LocalizerNet(nn.Module):
         )
         self.bn9 = nn.BatchNorm2d(512)
         self.d9 = nn.Dropout(p=p, inplace=True)
-        # self.conv10 = nn.Conv2d(
-        #     512, 256, kernel_size=1, padding=0, stride=1
-        # )
-        # self.bn10 = nn.BatchNorm2d(256)
-        # self.d10 = nn.Dropout(p=p, inplace=True)
-        # self.conv11 = nn.Conv2d(
-        #     256, 512, kernel_size=3, padding=1, stride=1
-        # )
-        # self.bn11 = nn.BatchNorm2d(512)
-        # self.d11 = nn.Dropout(p=p, inplace=True)
-        # self.conv12 = nn.Conv2d(
-        #     512, 256, kernel_size=1, padding=0, stride=1
-        # )
-        # self.bn12 = nn.BatchNorm2d(256)
-        # self.d12 = nn.Dropout(p=p, inplace=True)
+        self.conv10 = nn.Conv2d(
+            512, 256, kernel_size=1, padding=0, stride=1
+        )
+        self.bn10 = nn.BatchNorm2d(256)
+        self.d10 = nn.Dropout(p=p, inplace=True)
+        self.conv11 = nn.Conv2d(
+            256, 512, kernel_size=3, padding=1, stride=1
+        )
+        self.bn11 = nn.BatchNorm2d(512)
+        self.d11 = nn.Dropout(p=p, inplace=True)
+        self.conv12 = nn.Conv2d(
+            512, 256, kernel_size=1, padding=0, stride=1
+        )
+        self.bn12 = nn.BatchNorm2d(256)
+        self.d12 = nn.Dropout(p=p, inplace=True)
         self.conv13 = nn.Conv2d(
             512, 512, kernel_size=3, padding=1, stride=1
         )
@@ -219,7 +219,7 @@ class LocalizerNet(nn.Module):
 
         # Output Layer. #
         self.conv14 = nn.Conv2d(
-            512, 550, kernel_size=(15, 8), padding=0, stride=1
+            512, 550, kernel_size=(30, 16), padding=0, stride=1
         )
         self._init_full_yolo_weights()
 
@@ -242,9 +242,9 @@ class LocalizerNet(nn.Module):
         out = F.leaky_relu(self.d7(self.bn7(self.conv7(out))))
         out = self.mp8(F.leaky_relu(self.d8(self.bn8(self.conv8(out)))))
         out = F.leaky_relu(self.d9(self.bn9(self.conv9(out))))
-        # out = F.leaky_relu(self.d10(self.bn10(self.conv10(out))))
-        # out = F.leaky_relu(self.d11(self.bn11(self.conv11(out))))
-        # out = F.leaky_relu(self.d12(self.bn12(self.conv12(out))))
+        out = F.leaky_relu(self.d10(self.bn10(self.conv10(out))))
+        out = F.leaky_relu(self.d11(self.bn11(self.conv11(out))))
+        out = F.leaky_relu(self.d12(self.bn12(self.conv12(out))))
         out = self.mp13(F.leaky_relu(self.d13(self.bn13(self.conv13(out)))))
         return self.conv14(out)
 
@@ -266,8 +266,9 @@ class LocalizerNet(nn.Module):
 
     def _init_full_yolo_weights(self):
         for i in range(13):
-            if i+1 in [10, 11, 12, 13]: continue
-            requires_grad = (i+1 >= 6)
+            # if i+1 in [10, 11, 12, 13]: continue
+            # requires_grad = (i+1 >= 6)
+            requires_grad = True
             conv_name = 'conv2d_' + str(i+1)
             bn_name = 'batch_normalization_' + str(i+1)
             cw = torch.from_numpy(np.array(

@@ -39,17 +39,13 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
-            #train_losses.append(loss.item())
-            # print("Loss = ", loss.item())
-            # if scheduler:
-            # scheduler.step(loss.item())
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
         with torch.no_grad():
-            if (e+1) % 2 == 0:
+            if (e+1) % 10 == 0:
                 d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
                 map_ = calculate_map(y_hat, y)
                 dev_losses.append(d_loss)
@@ -103,40 +99,46 @@ def calculate_loss(y_hat, y, lambdah=0.5, S=5, B=2, K=11):
     object_mask = (y[:, :, 0] == 1)
     y_hat = y_hat[object_mask]
     y = y[object_mask]
-    # print(y, y_hat.shape)
 
-    loss = torch.nn.MSELoss()
-    object_loss = torch.nn.BCEWithLogitsLoss()
+    coord_loss = torch.nn.MSELoss()
+    object_loss = torch.nn.MSELoss()
+    no_object_loss = torch.nn.MSELoss()
+    class_loss = torch.nn.MSELoss()
 
-    a = object_loss(y_hat[:, 0], y[:, 0])
-    b = loss(y_hat[:, 1:9], y[:, 1:9])
-    c1 = object_loss(y_hat[:, -2], y[:, -2])
-    c2 = object_loss(y_hat[:, -1], y[:, -1])
-    d =  lambdah*object_loss(y_hat_no_obj[:, 0], y_no_obj[:, 0])
+    a = object_loss(y_hat[:, :1], y[:, :1])
+    b = coord_loss(y_hat[:, 1:9], y[:, 1:9])
+    c = class_loss(y_hat[:, 9:], y[:, 9:])
+    d =  lambdah*no_object_loss(y_hat_no_obj[:, :1], y_no_obj[:, :1])
 
-    return a + b + c1 + c2 + d
-    # return lambdah*loss(y_hat, y.view(N, -1))
+    return a + b + c + d
 
 
-def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.5):
+def calculate_map(y_hat, y, S=5, B=2, K=11, threshold=0.9):
     '''
     y_hat is the predicted tensor
     y is the ground truth tensor.
     '''
     N=y_hat.shape[0]
-    y_hat = y_hat.reshape(N, S, S, B, K)
-    y = y.reshape(N, S, S, B, K)
+    y_hat = y_hat.reshape(N, S*S*B, K)
+    y = y.reshape(N, S*S*B, K)
 
-    pred_mask = y_hat[:, :, :, :, 0] >= threshold
+    # y_hat[:, :, :1] = F.sigmoid(y_hat[:, :, :1])
+    pred_mask = (y_hat[:, :, 0] >= threshold)
     preds = y_hat[pred_mask]
+
     if len(preds) > 0:
         truth = y[pred_mask]
+        # preds[:, -2] = F.sigmoid(preds[:, -2])
+        # preds[:, -1] = F.sigmoid(preds[:, -1])
 
         nutrition_preds = preds[preds[:, -2] >= threshold]
         nutrition_truth = truth[preds[:, -2] >= threshold]
 
         ingridient_preds = preds[preds[:, -1] >= threshold]
         ingridient_truth = truth[preds[:, -1] >= threshold]
+        # print(" == NUTRITION == ")
+        # print(nutrition_preds[:2])
+        # print(nutrition_truth[:2])
 
         nutr_precision, ingr_precision = (
             get_precision(nutrition_preds, nutrition_truth),
@@ -157,7 +159,7 @@ def get_precision(y_hat, y, iou_threshold=[0.5, 0.6, 0.7, 0.8]):
     return true_positives / N
 
 
-def calculate_iou(y_pred, y_truth, h=1920/4, w=1080/4):
+def calculate_iou(y_pred, y_truth, h=1920/2, w=1080/2):
     '''
      y and y_h are 8-tensors
      in which each number holds true universal meaning.

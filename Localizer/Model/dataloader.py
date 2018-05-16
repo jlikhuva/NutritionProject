@@ -9,12 +9,12 @@ from torch.utils.data import Dataset, DataLoader
 class NutritionDataset(Dataset):
     def __init__(
         self, image_dir, bounding_boxes_path,
-        data_path, split='train', shrink_factor=(4, 4),
+        data_path, split='train', shrink_factor=(2, 2),
         debug=True
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:10]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:2]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:1000]]
         self.bounding_boxes = np.load(bounding_boxes_path).item()

@@ -137,7 +137,7 @@ class LocalizerNet(nn.Module):
         out = self.fc(out.view(out.shape[0], -1))
         return out
 
-    def _init_full_yolo(self):
+    def _init_full_yolo(self, K=7, B=2, S=3):
         # Block 1 #
         p = self.p
         self.conv1 = nn.Conv2d(
@@ -219,7 +219,7 @@ class LocalizerNet(nn.Module):
 
         # Output Layer. #
         self.conv14 = nn.Conv2d(
-            512, 550, kernel_size=(30, 16), padding=0, stride=1
+            512, S*S*K*B, kernel_size=(15, 8), padding=0, stride=1
         )
         self._init_full_yolo_weights()
 
@@ -267,8 +267,8 @@ class LocalizerNet(nn.Module):
     def _init_full_yolo_weights(self):
         for i in range(13):
             # if i+1 in [10, 11, 12, 13]: continue
-            # requires_grad = (i+1 >= 6)
-            requires_grad = True
+            requires_grad = (i+1 >= 7)
+            # requires_grad = True
             conv_name = 'conv2d_' + str(i+1)
             bn_name = 'batch_normalization_' + str(i+1)
             cw = torch.from_numpy(np.array(

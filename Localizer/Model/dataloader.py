@@ -9,12 +9,12 @@ from torch.utils.data import Dataset, DataLoader
 class NutritionDataset(Dataset):
     def __init__(
         self, image_dir, bounding_boxes_path,
-        data_path, split='train', shrink_factor=(2, 2),
+        data_path, split='train', shrink_factor=(4, 4),
         debug=True
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:2]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:10]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images]
         self.bounding_boxes = np.load(bounding_boxes_path).item()
@@ -47,20 +47,37 @@ class NutritionDataset(Dataset):
             1920//self.shrink_factor[1]
         )
 
+def get_bounding_rect(coords):
+    '''
+    Transform an arbitrarily shaped quadrilateral into a
+    the smallest Rectangle that it can fit in.
+    '''
+    x_max, x_min = max(coords[::2]), min(coords[::2])
+    y_max, y_min = max(coords[1:][::2]), min(coords[1:][::2])
+    center_x = (x_min + x_max)/2; center_y = (y_min + y_max)/2
+    width = (x_max - x_min); height = (y_max - y_min)
+    return np.array([center_x, center_y, width, height]), (center_x, center_y)
 
-def create_target_tensor(nutrition, ingridients, w, h, S=5):
+def create_target_tensor(nutrition, ingridients, w, h, S=3, K=7,  B=2):
     cell_w = w//S ;cell_h = h//S
-    ingr_center = get_bbox_center(ingridients)
-    nutr_center = get_bbox_center(nutrition)
+    if K == 11:
+        ingr_center = get_bbox_center(ingridients)
+        nutr_center = get_bbox_center(nutrition)
+
     ingridients = [(t[0]/float(w), t[1]/float(h)) for t in ingridients]
     nutrition = [(t[0]/float(w), t[1]/float(h)) for t in nutrition]
-    target_tensor = np.zeros((S, S, 2, 11), dtype=np.float32)
+    target_tensor = np.zeros((S, S, B, K), dtype=np.float32)
     ingr_t = np.array(
         list(chain.from_iterable(ingridients))
     )
     nutr_t = np.array(
         list(chain.from_iterable(nutrition))
     )
+    if K == 7:
+        ingr_t, ingr_center = get_bounding_rect(ingr_t)
+        nutr_t, nutr_center = get_bounding_rect(nutr_t)
+
+
     ing_found, nut_found = False, False
     for i in range(S):
         for j in range(S):
@@ -69,16 +86,17 @@ def create_target_tensor(nutrition, ingridients, w, h, S=5):
             ingr_in_cell = center_in_cell(ingr_center, start, cell_w, cell_h)
             if nutr_in_cell and not nut_found:
                 nut_found = True
-                # print("\t Found Nutrition")
+
                 target_tensor[i, j, 0, 0] = 1
                 target_tensor[i, j, 0, 1:-2] = nutr_t
                 target_tensor[i, j, 0, -2] = 1
             if ingr_in_cell and not ing_found:
                 ing_found = True
-                # print("\t Found ingridients")
+
                 target_tensor[i, j, 1, 0] = 1
                 target_tensor[i, j, 1, 1:-2] = ingr_t
                 target_tensor[i, j, 1, -1] = 1
+    # print (target_tensor.shape)
     return torch.FloatTensor(target_tensor)
 
 def get_bbox_center(coords):

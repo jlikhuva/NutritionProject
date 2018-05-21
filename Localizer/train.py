@@ -45,25 +45,26 @@ def train_localizer(
             optimizer.step()
 
         with torch.no_grad():
-            if (e+1) % 5 == 0:
-                d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
-                map_ = calculate_map(y_hat, y)
-                dev_losses.append(d_loss)
-                dev_map.append(d_map)
-                train_map.append(map_)
-                train_losses.append(loss.item())
+            d_loss, d_map = check_perf_on_dev(dev_data_loader, model)
+            map_ = calculate_map(y_hat, y)
+            dev_losses.append(d_loss)
+            dev_map.append(d_map)
+            train_map.append(map_)
+            train_losses.append(loss.item())
+            if d_loss < best_loss:
+                utils.save_checkpoint({
+                    'epoch' : e+1, 'state_dict' : model.state_dict(),
+                    "optim_dict" : optimizer.state_dict()
+                })
+                best_loss = d_loss
 
+            if (e+1) % 5 == 0:
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", d_loss)
                 print("\t Train mAP = ", map_)
                 print("\t Dev mAP = ", d_map)
-                if d_loss < best_loss:
-                    utils.save_checkpoint({
-                        'epoch' : e+1, 'state_dict' : model.state_dict(),
-                        "optim_dict" : optimizer.state_dict()
-                    })
-                    best_loss = d_loss
+
         if scheduler:
             scheduler.step()
     return train_losses, dev_losses, train_map, dev_map

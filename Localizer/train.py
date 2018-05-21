@@ -16,7 +16,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 dtype=torch.float32
-LARGE_NUMBER = 0.4216845867962673
+LARGE_NUMBER = 0.0029636862745974213
 
 def train_localizer(
     model, optimizer, train_data_loader,

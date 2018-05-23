@@ -3,6 +3,7 @@
 # Utility Functions for logging and Saving model.
 import os
 import torch
+import numpy as np
 '''
  ##################
  # Example Usage  #
@@ -51,8 +52,29 @@ def load_checkpoint(checkpoint, model, optimizer=None):
     """
     if not os.path.exists(checkpoint):
         raise("File doesn't exist {}".format(checkpoint))
-    checkpoint = torch.load(checkpoint, map_location=lambda storage, loc: storage)
+    checkpoint = torch.load(
+        checkpoint,
+        map_location=lambda storage, loc: storage
+    )
     model.load_state_dict(checkpoint['state_dict'])
 
     if optimizer:
         optimizer.load_state_dict(checkpoint['optim_dict'])
+
+
+class SubtructMeanImage(object):
+    '''
+        subtract the mean image from the image
+    '''
+    def __init__(self, path_to_mean_image):
+        self.mean_image = torch.from_numpy(
+            np.load(path_to_mean_image)
+        ).permute(2, 0, 1).float()
+    def __call__(self, image_tensor):
+        image =  image_tensor - self.mean_image
+        return image
+
+def show_image(pytorch_tensor):
+    import torchvision.transforms.functional as F
+    a = F.to_pil_image(pytorch_tensor)
+    return a

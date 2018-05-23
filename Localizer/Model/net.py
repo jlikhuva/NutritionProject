@@ -2,6 +2,7 @@ import h5py
 import torch
 import numpy as np
 import torch.nn as nn
+from torch.nn import init
 import torch.nn.functional as F
 
 class LocalizerNet(nn.Module):
@@ -221,8 +222,8 @@ class LocalizerNet(nn.Module):
         self.conv14 = nn.Conv2d(
             512, S*S*K*B, kernel_size=(15, 8), padding=0, stride=1
         )
+        init.xavier_uniform_(self.conv14.weight.data)
         self._init_full_yolo_weights()
-
 
     def _full_yolo_forward(self, x):
         out = self._run_block_one(x)

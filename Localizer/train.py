@@ -16,17 +16,17 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 dtype=torch.float32
-LARGE_NUMBER = 0.0029636862745974213
+LARGE_NUMBER = 0.0027425079606473446
 
 def train_localizer(
     model, optimizer, train_data_loader,
     dev_data_loader, epochs=1, restore=True,
     restore_path='../Data/FullData/best_model.tar',
-    scheduler=None
+    scheduler=None, save=True
 ):
     train_losses, dev_losses, train_map, dev_map = [], [], [], []
     best_loss = LARGE_NUMBER
-    if torch.cuda.device_count() > 1:
+    if torch.cuda.device_count() > 1 or restore:
         model = torch.nn.DataParallel(model)
     model = model.to(device)
     if restore:
@@ -51,14 +51,14 @@ def train_localizer(
             dev_map.append(d_map)
             train_map.append(map_)
             train_losses.append(loss.item())
-            if d_loss < best_loss:
+            if save and d_loss < best_loss:
                 utils.save_checkpoint({
                     'epoch' : e+1, 'state_dict' : model.state_dict(),
                     "optim_dict" : optimizer.state_dict()
                 })
                 best_loss = d_loss
 
-            if (e+1) % 5 == 0:
+            if (e+1) % 1 == 0:
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", d_loss)

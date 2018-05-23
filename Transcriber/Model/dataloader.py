@@ -14,8 +14,8 @@ class TranscriptionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:10]]
-            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:10]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:1]]
+            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:1]]
         else:
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images]
@@ -31,7 +31,10 @@ class TranscriptionDataset(Dataset):
     def __getitem__(self, idx):
         image = Image.open(self.images[idx])
         y = self._get_target_sequence(self.images[idx])
-        return image, y
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        return transform(image), y
 
     def _get_target_sequence(self, path):
         name = path[path.rfind('/')+1 : ]

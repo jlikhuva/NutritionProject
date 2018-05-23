@@ -6,19 +6,25 @@ from itertools import chain
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 
+from Shared import utils
+
+
 class NutritionDataset(Dataset):
     def __init__(
         self, image_dir, bounding_boxes_path,
         data_path, split='train', shrink_factor=(4, 4),
-        debug=True
+        debug=True, mean_normalize=False,
+        mean_path=None
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:10]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:1]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:]]
         self.bounding_boxes = np.load(bounding_boxes_path).item()
         self.shrink_factor = shrink_factor
+        self.mean_normalize = mean_normalize
+        self.mean_path = mean_path
 
     def __len__(self):
         return len(self.images)
@@ -33,7 +39,11 @@ class NutritionDataset(Dataset):
         transform = transforms.Compose([
             transforms.ToTensor(),
         ])
-        return transform(image), y
+        image = transform(image)
+        if self.mean_normalize:
+            norm_t = transforms.Compose([utils.SubtructMeanImage(self.mean_path)])
+            image = norm_t(image)
+        return image, y
 
     def _create_yolo_target_tensor(self, idx):
         nutrition, ingridients, _ = self.bounding_boxes[self.cur_split_images[idx]]

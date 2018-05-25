@@ -58,7 +58,7 @@ def train_localizer(
                 })
                 best_loss = d_loss
 
-            if (e+1) % 1 == 0:
+            if (e+1) % 5 == 0:
                 print("=== Performance Check ===")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", d_loss)
@@ -73,6 +73,7 @@ def train_localizer(
 def check_perf_on_dev(data_loader, model):
     losses=[]; maps = []
     with torch.no_grad():
+        model.eval()
         for x, y in data_loader:
             x = x.to(device=device, dtype=dtype)
             y = y.to(device=device, dtype=dtype)
@@ -81,6 +82,7 @@ def check_perf_on_dev(data_loader, model):
             losses.append(loss.item())
             d_map = calculate_map(y_hat, y)
             maps.append(d_map)
+        model.train()
     return np.mean(losses), np.mean(maps, axis=0)
 
 

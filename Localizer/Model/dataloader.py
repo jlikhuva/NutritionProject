@@ -1,11 +1,12 @@
 import os
+import sys
 import torch
 import numpy as np
 from PIL import Image
 from itertools import chain
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
-
+sys.path.append("..")
 from Shared import utils
 
 
@@ -18,7 +19,7 @@ class NutritionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:1]]
+            self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:5]]
         else:
             self.images = [os.path.join(image_dir, f) for f in self.cur_split_images[:]]
         self.bounding_boxes = np.load(bounding_boxes_path).item()

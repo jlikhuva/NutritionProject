@@ -61,6 +61,7 @@ class EncoderNet(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
         )
+        self.fc = nn.Linear(2048, 100)
         self._init_all_parameters()
 
     def _init_all_parameters(self):
@@ -75,6 +76,7 @@ class EncoderNet(nn.Module):
         transformed_x = self.stn_forward(x)
         encoding = self.encoding_network(transformed_x)
         encoding = encoding.reshape(encoding.shape[0], -1)
+        encoding = self.fc(encoding)
         return encoding, transformed_x
 
     def stn_forward(self, x):

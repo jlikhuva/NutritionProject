@@ -41,6 +41,8 @@ class Vocabulary(object):
         return nn.Parameter(
             torch.from_numpy(np.array(self.word_vectors, dtype=np.float32))
         )
+    def get_word_from_index(self, index):
+        return self.index_to_word[index]
 
 
 class TranscriptionDataset(Dataset):
@@ -51,8 +53,8 @@ class TranscriptionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:5]]
-            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:5]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:1]]
+            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:1]]
         else:
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images]
@@ -89,6 +91,9 @@ class TranscriptionDataset(Dataset):
 
     def get_output_size(self):
         return len(self.vocab)
+    
+    def get_word(self, index):
+        return self.vocab.get_word_from_index(index)
 
 def collate_fn(data):
     '''

@@ -25,9 +25,8 @@ class DecoderNet(nn.Module):
 
     # Foward and sample stolen from https://github.com/yunjey/pytorch-tutorial
     def forward(self, features, captions, lengths):
-        """Decode image feature vectors and generates captions."""
+        """Decode image feature vectors and generate captions."""
         embeddings = self.embed(captions)
-        
         embeddings = torch.cat((features.unsqueeze(1), embeddings), 1)
         packed = pack_padded_sequence(embeddings, lengths, batch_first=True)
         hiddens, _ = self.lstm(packed)

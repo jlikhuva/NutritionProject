@@ -1,3 +1,4 @@
+import os
 import sys
 import torch
 import numpy as np
@@ -21,17 +22,28 @@ else:
 dtype=torch.float32
 
 LARGE_NUMBER = 1e5
+LOG_OF_CAPTIONS = '../Data/FullData/LOG_OF_CAPTIONS.txt'
 def train_transcriber(
     encoder, decoder, optimizer, train_data_loader,
     dev_data_loader, train_dataset, dev_dataset, epochs=1, restore=False,
-    restore_path='../Data/FullData/best_transcription_model.tar',
+    restore_path='best_transcription_model.tar',
     scheduler=None, save=True
 ):
     train_losses, dev_losses, train_bleu, dev_bleu = [], [], [], []
     best_loss = LARGE_NUMBER
-    if torch.cuda.device_count() > 1 or restore:
+    if torch.cuda.device_count() > 1:
         encoder = torch.nn.DataParallel(encoder)
-        decoder = torch.nn.DataParallel(decoder)
+    if restore:
+        restore_path = os.path.join('../Data/FullData/', restore_path)
+        checkpoint = torch.load(
+            restore_path,
+            map_location=lambda storage, loc: storage
+        )
+        encoder.load_state_dict(checkpoint['encoder'])
+        decoder.load_state_dict(checkpoint['decoder'])
+        optimizer.load_state_dict(checkpoint['optim_dict'])
+        best_loss = checkpoint['loss']
+
     encoder = encoder.to(device)
     decoder = decoder.to(device)
     for i in range(epochs):
@@ -40,19 +52,25 @@ def train_transcriber(
                 forward(images, captions, lengths, encoder, decoder)
             )
             loss = calculate_loss(outputs, targets)
-            avg_dev_loss, dev_blu = (
-                evaluate_on_dev(dev_data_loader, encoder, decoder, train_dataset, dev_dataset)
-            )
-            train_losses.append(loss)
-            dev_losses.append(avg_dev_loss)
-            dev_bleu.append(dev_blu)
-
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
 
         with torch.no_grad():
             '''Evaluate as We train'''
+            avg_dev_loss, dev_blu = (
+                evaluate_on_dev(dev_data_loader, encoder, decoder, train_dataset, dev_dataset)
+            )
+            train_losses.append(loss)
+            dev_losses.append(avg_dev_loss)
+            dev_bleu.append(dev_blu)
+            if save and avg_dev_loss < best_loss:
+                utils.save_checkpoint({
+                    'encoder': encoder.state_dict(), 'decoder': decoder.state_dict(),
+                    'optim_dict': optimizer.state_dict(), 'loss': avg_dev_loss
+                }, name=restore_path)
+                best_loss = avg_dev_loss
+
             if (i+1)%5 == 0:
                 print("==== Performance Check === ")
                 print("\t Train Loss = ", loss.item())
@@ -88,12 +106,20 @@ def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
 
 def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, dev_dataset):
     bleu_scores = []
-    sampled_ids = decoder.sample(features_batch)
+    if isinstance(decoder, torch.nn.DataParallel):
+        sampled_ids = decoder.module.sample(features_batch)
+    else:
+        sampled_ids = decoder.sample(features_batch)
 
-    for predicted, truth in zip(sampled_ids, true_captions):
-        true_caption = get_words(truth, train_dataset)
-        generated_caption = get_words(predicted, dev_dataset)
-        bleu_scores.append(sentence_bleu(true_caption, generated_caption))
+    with open(LOG_OF_CAPTIONS, 'w+') as log:
+        for predicted, truth in zip(sampled_ids, true_captions):
+            true_caption = get_words(truth, train_dataset)
+            generated_caption = get_words(predicted, dev_dataset)
+            bleu_scores.append(sentence_bleu(true_caption, generated_caption))
+            log.write(' '.join(true_caption)); log.write('\n')
+            log.write(' '.join(generated_caption)); log.write('\n')
+            log.write('\t\t\t==================\n')
+
     return np.mean(np.array(bleu_scores))
 
 def get_words(indexes, dataset):

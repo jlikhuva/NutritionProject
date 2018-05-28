@@ -19,7 +19,7 @@ utils.save_checkpoint(
 )
 '''
 
-def save_checkpoint(state, checkpoint='../Data/FullData'):
+def save_checkpoint(state, checkpoint='../Data/FullData', name='best_model.tar'):
     """
     Saves the best model and training parameters at
     `checkpoint + 'best_model.tar'``.
@@ -30,7 +30,7 @@ def save_checkpoint(state, checkpoint='../Data/FullData'):
         checkpoint:
             (string) folder where parameters are to be saved
     """
-    filepath = os.path.join(checkpoint, 'best_model.tar')
+    filepath = os.path.join(checkpoint, name)
     if not os.path.exists(checkpoint):
         print("Checkpoint Directory does not exist! Making directory {}".format(checkpoint))
         os.mkdir(checkpoint)

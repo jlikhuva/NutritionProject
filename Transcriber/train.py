@@ -55,6 +55,7 @@ def train_transcriber(
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
+            del outputs, targets, train_encodings, true_captions
 
         with torch.no_grad():
             '''Evaluate as We train'''
@@ -71,7 +72,7 @@ def train_transcriber(
                 }, name=restore_path)
                 best_loss = avg_dev_loss
 
-            if (i+1)%5 == 0:
+            if (i+1)%10 == 0:
                 print("==== Performance Check === ")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", avg_dev_loss)
@@ -101,6 +102,7 @@ def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
         loss = calculate_loss(outputs, targets)
         losses.append(loss.item())
     dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
+    del outputs, targets, dev_encodings, true_captions
     encoder.train(); decoder.train()
     return np.mean(np.array(losses)), dev_blu
 
@@ -110,6 +112,8 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
         sampled_ids = decoder.module.sample(features_batch)
     else:
         sampled_ids = decoder.sample(features_batch)
+    sampled_ids = sampled_ids.cpu().numpy()
+    true_captions = true_captions.cpu().numpy()
     smoothing_func = SmoothingFunction().method1
     with open(LOG_OF_CAPTIONS, 'w+') as log:
         for predicted, truth in zip(sampled_ids, true_captions):
@@ -122,13 +126,13 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
             log.write(' '.join(true_caption)); log.write('\n')
             log.write(' '.join(generated_caption)); log.write('\n')
             log.write('\t\t\t==================\n')
-
+    del sampled_ids
     return np.mean(np.array(bleu_scores))
 
 def get_words(indexes, dataset):
     words = []
     for idx in indexes:
-        word = dataset.get_word(idx.item())
+        word = dataset.get_word(idx)
         words.append(word)
         if word == '<end>': break
     return words

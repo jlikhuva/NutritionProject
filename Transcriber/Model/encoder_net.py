@@ -74,6 +74,7 @@ class EncoderNet(nn.Module):
 
     def forward(self, x):
         transformed_x = self.stn_forward(x)
+        # transformed_x = x
         encoding = self.encoding_network(transformed_x)
         encoding = encoding.reshape(encoding.shape[0], -1)
         encoding = self.fc(encoding)

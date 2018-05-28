@@ -5,6 +5,7 @@ import torch.nn as nn
 import numpy as np
 from PIL import Image
 from itertools import chain
+from random import shuffle
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 
@@ -39,7 +40,8 @@ class Vocabulary(object):
 
     def get_word_vectors(self):
         return nn.Parameter(
-            torch.from_numpy(np.array(self.word_vectors, dtype=np.float32))
+            torch.from_numpy(np.array(self.word_vectors, dtype=np.float32)),
+            requires_grad=False
         )
     def get_word_from_index(self, index):
         return self.index_to_word[index]
@@ -58,6 +60,7 @@ class TranscriptionDataset(Dataset):
         else:
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images]
+        shuffle(self.images)
 
         self.annotations = np.load(annotation_path).item()
         self.vocab = Vocabulary(word_vec_path)
@@ -91,7 +94,7 @@ class TranscriptionDataset(Dataset):
 
     def get_output_size(self):
         return len(self.vocab)
-    
+
     def get_word(self, index):
         return self.vocab.get_word_from_index(index)
 

@@ -12,11 +12,12 @@ class DecoderNet(nn.Module):
     ):
         super(DecoderNet, self).__init__()
         self.embed = nn.Embedding(output_size, embed_size)
-        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(
+            embed_size, hidden_size, num_layers, batch_first=True,
+        )
         self.linear = nn.Linear(hidden_size, output_size)
 
         self.max_length = max_length
-        self.p = 1 - dropout_keep_prob
         self.word_vectors = word_vectors
         self._init()
 
@@ -36,7 +37,9 @@ class DecoderNet(nn.Module):
     def sample(self, features, states=None):
         """Generate captions for given image features using greedy search."""
         sampled_ids = []
+
         inputs = features.unsqueeze(1)
+
         for i in range(self.max_length):
             hiddens, states = self.lstm(inputs, states)          # hiddens: (batch_size, 1, hidden_size)
             outputs = self.linear(hiddens.squeeze(1))            # outputs:  (batch_size, vocab_size)

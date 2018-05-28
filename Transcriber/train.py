@@ -13,7 +13,7 @@ from torch.nn.utils.rnn import pack_padded_sequence
 from Shared import utils
 from Model.dataloader import TranscriptionDataset
 from Model import encoder_net, decoder_net
-from nltk.translate.bleu_score import sentence_bleu
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -34,9 +34,9 @@ def train_transcriber(
     if torch.cuda.device_count() > 1:
         encoder = torch.nn.DataParallel(encoder)
     if restore:
-        restore_path = os.path.join('../Data/FullData/', restore_path)
+        restore_loc = os.path.join('../Data/FullData/', restore_path)
         checkpoint = torch.load(
-            restore_path,
+            restore_loc,
             map_location=lambda storage, loc: storage
         )
         encoder.load_state_dict(checkpoint['encoder'])
@@ -110,12 +110,15 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
         sampled_ids = decoder.module.sample(features_batch)
     else:
         sampled_ids = decoder.sample(features_batch)
-
+    smoothing_func = SmoothingFunction().method1
     with open(LOG_OF_CAPTIONS, 'w+') as log:
         for predicted, truth in zip(sampled_ids, true_captions):
             true_caption = get_words(truth, train_dataset)
             generated_caption = get_words(predicted, dev_dataset)
-            bleu_scores.append(sentence_bleu(true_caption, generated_caption))
+            bleu_scores.append(sentence_bleu(
+                true_caption, generated_caption,
+                smoothing_function=smoothing_func
+            ))
             log.write(' '.join(true_caption)); log.write('\n')
             log.write(' '.join(generated_caption)); log.write('\n')
             log.write('\t\t\t==================\n')

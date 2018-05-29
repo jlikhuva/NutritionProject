@@ -65,7 +65,7 @@ def train_transcriber(
             train_blu = calculate_bleu_score(decoder, train_encodings, true_captions, train_dataset, dev_dataset)
             del outputs, targets, train_encodings, true_captions
 
-            train_losses.append(loss)
+            train_losses.append(loss.item())
             dev_losses.append(avg_dev_loss)
             dev_bleu.append(dev_blu)
             train_bleu.append(train_blu)
@@ -81,7 +81,8 @@ def train_transcriber(
                 print("==== Performance Check === ")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", avg_dev_loss)
-                print("\t Dev BLEU = ", train_blu)
+                print("\t Train BLEU = ", train_bleu)
+                print("\t Dev BLEU = ", dev_blu)
 
         if scheduler:
             scheduler.step()
@@ -106,8 +107,7 @@ def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
         )
         loss = calculate_loss(outputs, targets)
         losses.append(loss.item())
-    # dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
-    dev_blu = 0
+    dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
     del outputs, targets, dev_encodings, true_captions
     encoder.train(); decoder.train()
     return np.mean(np.array(losses)), dev_blu

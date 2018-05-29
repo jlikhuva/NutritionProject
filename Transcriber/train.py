@@ -45,7 +45,7 @@ def train_transcriber(
         best_loss = checkpoint['loss']
 
     encoder = encoder.to(device)
-    decoder = decoder.to(device)
+    # decoder = decoder.to(device)
     for i in range(epochs):
         for images, captions, lengths in tqdm(train_data_loader):
             outputs, targets, train_encodings, true_captions = (
@@ -55,16 +55,21 @@ def train_transcriber(
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
-            del outputs, targets, train_encodings, true_captions
+
 
         with torch.no_grad():
             '''Evaluate as We train'''
             avg_dev_loss, dev_blu = (
                 evaluate_on_dev(dev_data_loader, encoder, decoder, train_dataset, dev_dataset)
             )
+            train_blu = calculate_bleu_score(decoder, train_encodings, true_captions, train_dataset, dev_dataset)
+            del outputs, targets, train_encodings, true_captions
+
             train_losses.append(loss)
             dev_losses.append(avg_dev_loss)
             dev_bleu.append(dev_blu)
+            train_bleu.append(train_blu)
+
             if save and avg_dev_loss < best_loss:
                 utils.save_checkpoint({
                     'encoder': encoder.state_dict(), 'decoder': decoder.state_dict(),
@@ -72,11 +77,11 @@ def train_transcriber(
                 }, name=restore_path)
                 best_loss = avg_dev_loss
 
-            if (i+1)%10 == 0:
+            if (i+1)%5 == 0:
                 print("==== Performance Check === ")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", avg_dev_loss)
-                print("\t Dev BLEU = ", dev_blu)
+                print("\t Dev BLEU = ", train_blu)
 
         if scheduler:
             scheduler.step()
@@ -85,7 +90,7 @@ def train_transcriber(
 
 def forward(images, captions, lengths, encoder, decoder):
     images = images.to(device=device, dtype=dtype)
-    captions = captions.to(device=device)
+    # captions = captions.to(device=device)
     targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
     encoding, _ = encoder(images)
     outputs = decoder(encoding, captions, lengths)
@@ -101,7 +106,8 @@ def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
         )
         loss = calculate_loss(outputs, targets)
         losses.append(loss.item())
-    dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
+    # dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
+    dev_blu = 0
     del outputs, targets, dev_encodings, true_captions
     encoder.train(); decoder.train()
     return np.mean(np.array(losses)), dev_blu
@@ -127,7 +133,7 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
             log.write(' '.join(generated_caption)); log.write('\n')
             log.write('\t\t\t==================\n')
     del sampled_ids
-    return np.mean(np.array(bleu_scores))
+    return np.mean(np.array(bleu_scores, dtype=np.float32))
 
 def get_words(indexes, dataset):
     words = []

@@ -55,13 +55,23 @@ class EncoderNet(nn.Module):
             nn.Dropout(p=p, inplace=True),
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
-            nn.Conv2d(512, 8, kernel_size=1, padding=0, stride=1),
+            nn.Conv2d(512, 32, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm2d(32),
+            nn.Dropout(p=p, inplace=True),
+            nn.MaxPool2d(2, 2),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(32, 16, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm2d(16),
+            nn.Dropout(p=p, inplace=True),
+            nn.MaxPool2d(2, 2),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(16, 8, kernel_size=1, padding=0, stride=1),
             nn.BatchNorm2d(8),
             nn.Dropout(p=p, inplace=True),
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
         )
-        self.fc = nn.Linear(2048, 100)
+        self.fc = nn.Linear(128, 100)
         self._init_all_parameters()
 
     def _init_all_parameters(self):
@@ -73,12 +83,11 @@ class EncoderNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
-        #transformed_x = self.stn_forward(x)
-        transformed_x = x
+        transformed_x = self.stn_forward(x)
         encoding = self.encoding_network(transformed_x)
         encoding = encoding.reshape(encoding.shape[0], -1)
         encoding = self.fc(encoding)
-        return encoding, transformed_x
+        return encoding, None
 
     def stn_forward(self, x):
         theta_prime = self.localization_network(x)

@@ -74,7 +74,7 @@ class TranscriptionDataset(Dataset):
         y = self._get_target_sequence(self.images[idx])
         transform = transforms.Compose([
             transforms.ToTensor(),
-            # utils.SubtructMeanImage(self.mean_path)
+            utils.SubtructMeanImage(self.mean_path)
         ])
         return transform(image), y
 

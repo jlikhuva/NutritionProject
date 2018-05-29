@@ -81,7 +81,7 @@ def train_transcriber(
                 print("==== Performance Check === ")
                 print("\t Train Loss = ", loss.item())
                 print("\t Dev Loss = ", avg_dev_loss)
-                print("\t Train BLEU = ", train_bleu)
+                print("\t Train BLEU = ", train_blu)
                 print("\t Dev BLEU = ", dev_blu)
 
         if scheduler:
@@ -94,6 +94,7 @@ def forward(images, captions, lengths, encoder, decoder):
     # captions = captions.to(device=device)
     targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
     encoding, _ = encoder(images)
+    encoding = encoding.to('cpu')
     outputs = decoder(encoding, captions, lengths)
     return outputs, targets, encoding, captions
 

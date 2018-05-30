@@ -41,11 +41,11 @@ def train_transcriber(
         )
         encoder.load_state_dict(checkpoint['encoder'])
         decoder.load_state_dict(checkpoint['decoder'])
-        optimizer.load_state_dict(checkpoint['optim_dict'])
+        #optimizer.load_state_dict(checkpoint['optim_dict'])
         best_loss = checkpoint['loss']
 
     encoder = encoder.to(device)
-    # decoder = decoder.to(device)
+    decoder = decoder.to(device)
     for i in range(epochs):
         for images, captions, lengths in tqdm(train_data_loader):
             outputs, targets, train_encodings, true_captions = (
@@ -91,10 +91,10 @@ def train_transcriber(
 
 def forward(images, captions, lengths, encoder, decoder):
     images = images.to(device=device, dtype=dtype)
-    # captions = captions.to(device=device)
+    captions = captions.to(device=device)
     targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
     encoding, _ = encoder(images)
-    encoding = encoding.to('cpu')
+    #encoding = encoding.to('cpu')
     outputs = decoder(encoding, captions, lengths)
     return outputs, targets, encoding, captions
 

@@ -39,7 +39,6 @@ def train_localizer(
             y = labels_batch.to(device=device, dtype=dtype)
             y_hat = model(x)
             loss = calculate_loss(y_hat, y)
-
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

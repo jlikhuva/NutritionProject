@@ -41,17 +41,18 @@ def train_transcriber(
         )
         encoder.load_state_dict(checkpoint['encoder'])
         decoder.load_state_dict(checkpoint['decoder'])
-        optimizer.load_state_dict(checkpoint['optim_dict'])
+        # optimizer.load_state_dict(checkpoint['optim_dict'])
         best_loss = checkpoint['loss']
 
     encoder = encoder.to(device)
     # decoder = decoder.to(device)
     for i in range(epochs):
-        for images, captions, lengths in tqdm(train_data_loader):
-            outputs, targets, train_encodings, true_captions = (
+        for images, captions, lengths, aux_labels in tqdm(train_data_loader):
+            # print(aux_labels)
+            outputs, targets, train_encodings, true_captions, class_ = (
                 forward(images, captions, lengths, encoder, decoder)
             )
-            loss = calculate_loss(outputs, targets)
+            loss = calculate_loss(outputs, targets, class_, aux_labels)
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
@@ -93,20 +94,20 @@ def forward(images, captions, lengths, encoder, decoder):
     images = images.to(device=device, dtype=dtype)
     # captions = captions.to(device=device)
     targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
-    encoding, _ = encoder(images)
+    encoding, _, class_ = encoder(images)
     encoding = encoding.to('cpu')
     outputs = decoder(encoding, captions, lengths)
-    return outputs, targets, encoding, captions
+    return outputs, targets, encoding, captions, class_
 
 
 def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
     encoder.eval(); decoder.eval()
     losses = []
-    for images, captions, lengths in loader:
-        outputs, targets, dev_encodings, true_captions = (
+    for images, captions, lengths, aux_labels in loader:
+        outputs, targets, dev_encodings, true_captions, class_ = (
             forward(images, captions, lengths, encoder, decoder)
         )
-        loss = calculate_loss(outputs, targets)
+        loss = calculate_loss(outputs, targets, class_, aux_labels)
         losses.append(loss.item())
     dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset)
     del outputs, targets, dev_encodings, true_captions
@@ -144,6 +145,7 @@ def get_words(indexes, dataset):
         if word == '<end>': break
     return words
 
-def calculate_loss(y_hat, y_truth):
+def calculate_loss(y_hat, y_truth, aux_y_hat, aux_y, lambdah=1.5):
     loss_function = nn.CrossEntropyLoss()
-    return loss_function(y_hat, y_truth)
+    aux_loss_function = nn.BCEWithLogitsLoss()
+    return loss_function(y_hat, y_truth) + lambdah*aux_loss_function(aux_y_hat.squeeze(), aux_y)

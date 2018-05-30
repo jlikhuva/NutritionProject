@@ -55,7 +55,7 @@ class TranscriptionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:5]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-5:]]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:5]]
         else:
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images]
@@ -71,23 +71,24 @@ class TranscriptionDataset(Dataset):
 
     def __getitem__(self, idx):
         image = Image.open(self.images[idx])
-        y = self._get_target_sequence(self.images[idx])
+        y, aux_label = self._get_target_sequence(self.images[idx])
         transform = transforms.Compose([
             transforms.ToTensor(),
             utils.SubtructMeanImage(self.mean_path)
         ])
-        return transform(image), y
+        return transform(image), y, aux_label
 
     def _get_target_sequence(self, path):
         name = path[path.rfind('/')+1 : ]
         name = name[:name.rfind('_')]
         annotations = self.annotations[name]
+        label = int(name[:name.rfind('_')])
 
         caption = []
         caption.append(self.vocab('<start>'))
         caption += [self.vocab(i) for i in annotations]
         caption.append(self.vocab('<end>'))
-        return torch.Tensor(caption)
+        return torch.Tensor(caption), label
 
     def get_word_vectors(self):
         return self.vocab.get_word_vectors()
@@ -107,13 +108,14 @@ def collate_fn(data):
         Returns:
             images: torch tensor (N, 3, 512, 512)
             targets: torch tensor (N, padded_length)
+            auxilary_labels
     '''
     data.sort(key=lambda x: len(x[1]), reverse=True)
-    images, captions = zip(*data)
+    images, captions, aux_labels = zip(*data)
     images = torch.stack(images, 0)
     lengths = [len(caption) for caption in captions]
     targets = torch.zeros(len(captions), max(lengths)).long()
     for i, caption in enumerate(captions):
         end = lengths[i]
         targets[i, :end] = caption[:end]
-    return images, targets, lengths
+    return images, targets, lengths, torch.Tensor(aux_labels)

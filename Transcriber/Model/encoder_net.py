@@ -72,6 +72,8 @@ class EncoderNet(nn.Module):
             nn.LeakyReLU(inplace=True),
         )
         self.fc = nn.Linear(128, 100)
+
+        self.auxilary = nn.Linear(100, 1)
         self._init_all_parameters()
 
     def _init_all_parameters(self):
@@ -87,7 +89,9 @@ class EncoderNet(nn.Module):
         encoding = self.encoding_network(transformed_x)
         encoding = encoding.reshape(encoding.shape[0], -1)
         encoding = self.fc(encoding)
-        return encoding, None
+
+        class_ = self.auxilary(encoding)
+        return encoding, None, class_
 
     def stn_forward(self, x):
         theta_prime = self.localization_network(x)

@@ -146,4 +146,5 @@ def get_words(indexes, dataset):
 def calculate_loss(y_hat, y_truth, aux_y_hat, aux_y, lambdah=1.5):
     loss_function = nn.CrossEntropyLoss()
     aux_loss_function = nn.BCEWithLogitsLoss()
+    aux_y_hat = aux_y_hat.to(device); aux_y = aux_y.to(device)
     return loss_function(y_hat, y_truth) + lambdah*aux_loss_function(aux_y_hat.squeeze(), aux_y)

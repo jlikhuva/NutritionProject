@@ -4,11 +4,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence
 
-
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+else:
+    device = torch.device('cpu')
 class DecoderNet(nn.Module):
     def __init__(
-        self, word_vectors, output_size, embed_size, hidden_size=512,
-        dropout_keep_prob=1, max_length=110, num_layers=2
+        self, word_vectors, output_size, embed_size, hidden_size=1024,
+        dropout_keep_prob=1, max_length=110, num_layers=4
     ):
         super(DecoderNet, self).__init__()
         self.embed = nn.Embedding(output_size, embed_size)
@@ -39,7 +42,7 @@ class DecoderNet(nn.Module):
     def sample(self, features, states=None):
         """Generate captions for given image features using greedy search."""
         sampled_ids = []
-        inputs = torch.zeros(features.shape[0], 1, 100)
+        inputs = torch.zeros(features.shape[0], 1, 100).to(device)
         features = features.unsqueeze(1).expand(inputs.shape)
         embeddings = torch.cat((features, inputs), -1)
 

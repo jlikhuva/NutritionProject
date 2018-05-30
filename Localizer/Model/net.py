@@ -228,6 +228,7 @@ class LocalizerNet(nn.Module):
     def _full_yolo_forward(self, x):
         out = self._run_block_one(x)
         out = self._run_block_two(out)
+        out = self.conv14(out)
         return out.reshape(out.shape[0], out.shape[1])
 
     def _run_block_one(self, x):
@@ -247,7 +248,7 @@ class LocalizerNet(nn.Module):
         out = F.leaky_relu(self.d11(self.bn11(self.conv11(out))))
         out = F.leaky_relu(self.d12(self.bn12(self.conv12(out))))
         out = self.mp13(F.leaky_relu(self.d13(self.bn13(self.conv13(out)))))
-        return self.conv14(out)
+        return out
 
     def _init_frozen_layers(self):
         '''

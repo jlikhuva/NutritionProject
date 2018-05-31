@@ -11,7 +11,7 @@ else:
 class DecoderNet(nn.Module):
     def __init__(
         self, word_vectors, output_size, embed_size, hidden_size=1024,
-        dropout_keep_prob=1, max_length=110, num_layers=4
+        dropout_keep_prob=1, max_length=110, num_layers=3
     ):
         super(DecoderNet, self).__init__()
         self.embed = nn.Embedding(output_size, embed_size)

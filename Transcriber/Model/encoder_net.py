@@ -20,6 +20,8 @@ class EncoderNet(nn.Module):
         else: p = 0.005
         self.p = p
         self.yolo_weights = h5py.File(yolo_weights_path, 'r')
+
+        
         self.localization_network = nn.Sequential(
             nn.Conv2d(3, 8, kernel_size=5, padding=2, stride=2),
             nn.BatchNorm2d(8),
@@ -29,23 +31,18 @@ class EncoderNet(nn.Module):
             nn.BatchNorm2d(16),
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
-            nn.Conv2d(16, 32, kernel_size=5, padding=2, stride=2),
-            nn.BatchNorm2d(32),
-            nn.MaxPool2d(2, 2),
-            nn.LeakyReLU(inplace=True),
         )
         self.regressor = nn.Sequential(
-            nn.Linear(32*8*8, 32),
-            nn.ReLU(True),
-            nn.Linear(32, 3 * 2)
+            nn.Linear(16*32*32, 3*2),
         )
         self.regressor[-1].weight.data.zero_()
         self.regressor[-1].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
-
+        
         self.encoding_network = nn.Sequential(
-            nn.Conv2d(1024, 32, kernel_size=3, padding=1, stride=1),
+            nn.Conv2d(3, 32, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(32),
             nn.Dropout(p=p, inplace=True),
+            nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
             nn.Conv2d(32, 64, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(64),
@@ -56,20 +53,21 @@ class EncoderNet(nn.Module):
             nn.Conv2d(64, 128, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(128),
             nn.Dropout(p=p, inplace=True),
+            nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
-            nn.Conv2d(128, 512, kernel_size=3, padding=1, stride=1),
-            nn.BatchNorm2d(512),
+            nn.Conv2d(128, 32, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm2d(32),
             nn.Dropout(p=p, inplace=True),
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
-
-            nn.Conv2d(512, 1024, kernel_size=3, padding=1, stride=1),
-            nn.BatchNorm2d(1024),
-            nn.Dropout(p=p, inplace=True),
-            nn.MaxPool2d(2, 2),
-            nn.LeakyReLU(inplace=True),
+            
+            #nn.Conv2d(512, 32, kernel_size=1, padding=0, stride=1),
+            #nn.BatchNorm2d(32),
+            #nn.Dropout(p=p, inplace=True),
+            #nn.MaxPool2d(2, 2),
+            #nn.LeakyReLU(inplace=True),
         )
-        self.fc = nn.Linear(8*8*1024, 100)
+        self.fc = nn.Linear(4*4*32, 100)
 
         self.auxilary = nn.Linear(100, 1)
         self._init_some_parameters()
@@ -173,6 +171,7 @@ class EncoderNet(nn.Module):
         )
         self.bn10 = nn.BatchNorm2d(256)
         self.d10 = nn.Dropout(p=p, inplace=True)
+        '''
         self.conv11 = nn.Conv2d(
             256, 512, kernel_size=3, padding=1, stride=1
         )
@@ -189,11 +188,12 @@ class EncoderNet(nn.Module):
         self.bn13 = nn.BatchNorm2d(512)
         self.d13 = nn.Dropout(p=0, inplace=True)
         self.mp13 = nn.MaxPool2d(2, 2)
-
+        '''
         # Output Layer. #
         self.conv14 = nn.Conv2d(
-            512, 1024, kernel_size=3, padding=1, stride=1
+            256, 3, kernel_size=3, padding=1, stride=1
         )
+        self.mp14 = nn.MaxPool2d(2, 2)
         init.xavier_uniform_(self.conv14.weight.data)
         self._init_full_yolo_weights()
 
@@ -211,15 +211,15 @@ class EncoderNet(nn.Module):
         out = self.mp8(F.leaky_relu(self.d8(self.bn8(self.conv8(out)))))
         out = F.leaky_relu(self.d9(self.bn9(self.conv9(out))))
         out = F.leaky_relu(self.d10(self.bn10(self.conv10(out))))
-        out = F.leaky_relu(self.d11(self.bn11(self.conv11(out))))
-        out = F.leaky_relu(self.d12(self.bn12(self.conv12(out))))
-        out = self.mp13(F.leaky_relu(self.d13(self.bn13(self.conv13(out)))))
-        return self.conv14(out)
+        #out = F.leaky_relu(self.d11(self.bn11(self.conv11(out))))
+        #out = F.leaky_relu(self.d12(self.bn12(self.conv12(out))))
+        #out = self.mp13(F.leaky_relu(self.d13(self.bn13(self.conv13(out)))))
+        return self.mp14(self.conv14(out))
 
     def _init_full_yolo_weights(self):
-        for i in range(13):
+        for i in range(10):
             # if i+1 in [10, 11, 12, 13]: continue
-            requires_grad = (i+1 >= 10)
+            requires_grad = (i+1 >= 7)
             # requires_grad = True
             conv_name = 'conv2d_' + str(i+1)
             bn_name = 'batch_normalization_' + str(i+1)

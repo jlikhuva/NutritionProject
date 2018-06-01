@@ -23,6 +23,61 @@ dtype=torch.float32
 
 LARGE_NUMBER = 1e5
 LOG_OF_CAPTIONS = '../Data/FullData/LOG_OF_CAPTIONS.txt'
+def pre_train_encoder(
+    encoder, optimizer, train_data_loader, dev_data_loader,
+    restore_path='best_encoder_model.tar', save=True,
+    restore=False, scheduler=None, epochs=1
+):
+    train_losses, dev_losses, train_acc, dev_accs = [], [], [], []
+    best_loss = LARGE_NUMBER
+    if torch.cuda.device_count() > 1:
+        encoder = torch.nn.DataParallel(encoder)
+    if restore:
+        restore_loc = os.path.join('../Data/FullData/', restore_path)
+        checkpoint = torch.load(
+            restore_loc,
+            map_location=lambda storage, loc: storage
+        )
+        encoder.load_state_dict(checkpoint['encoder'])
+        best_loss = checkpoint['loss']
+    encoder = encoder.to(device)
+    for i in range(epochs):
+        for images, _, _, labels in tqdm(train_data_loader):
+            images = images.to(device, dtype=dtype)
+            _, _, out = encoder(images)
+            loss = calculate_encoder_loss(out, labels)
+            encoder.zero_grad(); loss.backward();
+            optimizer.step()
+
+            with torch.no_grad():
+                train_losses.append(loss.item())
+                train_acc.append(calculate_accuracy(out, labels))
+                dev_loss, dev_acc = evaluate_encoder(encoder, dev_data_loader)
+                dev_losses.append(dev_loss); dev_accs.append(dev_acc)
+                
+    return (train_losses, dev_losses), (train_acc, dev_accs)
+
+def calculate_encoder_loss(preds, truth):
+    criterion = nn.BCEWithLogitsLoss()
+    return criterion(preds.squeeze(), truth)
+
+def calculate_accuracy(preds, truth):
+    sigmoid = torch.nn.Sigmoid()
+    preds = torch.tensor([0.0 if i < 0.5 else 1.0 for i in sigmoid(preds)])
+    return ((preds == truth).sum() / len(truth)).item()
+
+def evaluate_encoder(encoder, dev_data_loader):
+    losses = []; acc = []
+    for images, _, _, labels in dev_data_loader:
+        _, _, out = encoder(images)
+        losses.append(calculate_encoder_loss(out, labels).item())
+        acc.append(float(calculate_accuracy(out, labels)))
+    return (
+        torch.mean(torch.tensor(losses)).item(),
+        torch.mean(torch.tensor(acc)).item()
+    )
+
+
 def train_transcriber(
     encoder, decoder, optimizer, train_data_loader,
     dev_data_loader, train_dataset, dev_dataset, epochs=1, restore=False,
@@ -42,7 +97,7 @@ def train_transcriber(
         encoder.load_state_dict(checkpoint['encoder'])
         decoder.load_state_dict(checkpoint['decoder'])
         best_loss = checkpoint['loss']
-        
+
     encoder = encoder.to(device)
     decoder = decoder.to(device)
     for i in range(epochs):
@@ -55,7 +110,6 @@ def train_transcriber(
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
-
 
         with torch.no_grad():
             '''Evaluate as We train'''

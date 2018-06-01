@@ -55,8 +55,8 @@ class TranscriptionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-1:]]
-            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:1]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-2:]]
+            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:2]]
         else:
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:500]]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[-500:]]

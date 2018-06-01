@@ -54,7 +54,13 @@ def pre_train_encoder(
                 train_acc.append(calculate_accuracy(out, labels))
                 dev_loss, dev_acc = evaluate_encoder(encoder, dev_data_loader)
                 dev_losses.append(dev_loss); dev_accs.append(dev_acc)
-                
+                if (i+1)%5 == 0:
+                    print("==== Performance Check === ")
+                    print("\t Train Loss = ", loss.item())
+                    print("\t Dev Loss = ", dev_loss)
+                    print("\t Train BLEU = ", train_acc)
+                    print("\t Dev BLEU = ", dev_acc)
+
     return (train_losses, dev_losses), (train_acc, dev_accs)
 
 def calculate_encoder_loss(preds, truth):

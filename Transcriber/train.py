@@ -64,12 +64,14 @@ def pre_train_encoder(
     return (train_losses, dev_losses), (train_acc, dev_accs)
 
 def calculate_encoder_loss(preds, truth):
+    truth = truth.to(device)
     criterion = nn.BCEWithLogitsLoss()
     return criterion(preds.squeeze(), truth)
 
 def calculate_accuracy(preds, truth):
+    truth = truth.to(device)
     sigmoid = torch.nn.Sigmoid()
-    preds = torch.tensor([0.0 if i < 0.5 else 1.0 for i in sigmoid(preds)])
+    preds = torch.tensor([0.0 if i < 0.5 else 1.0 for i in sigmoid(preds)]).to(device)
     return (float((preds == truth).sum())/len(truth))
 
 def evaluate_encoder(encoder, dev_data_loader):

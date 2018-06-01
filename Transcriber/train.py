@@ -60,6 +60,15 @@ def pre_train_encoder(
                 print("\t Dev Loss = ", dev_loss)
                 print("\t Train Acc = ", train_acc[-1])
                 print("\t Dev Acc = ", dev_acc)
+            if save and dev_loss < best_loss:
+                utils.save_checkpoint({
+                    'encoder': encoder.state_dict(),
+                    'loss': dev_loss
+                }, name=restore_path)
+                best_loss = dev_loss
+        if scheduler: scheduler.step()
+
+
 
     return (train_losses, dev_losses), (train_acc, dev_accs)
 

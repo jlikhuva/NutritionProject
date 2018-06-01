@@ -73,8 +73,8 @@ class TranscriptionDataset(Dataset):
         image = Image.open(self.images[idx])
         y, aux_label = self._get_target_sequence(self.images[idx])
         transform = transforms.Compose([
+            transforms.Resize((256, 256)),
             transforms.ToTensor(),
-            utils.SubtructMeanImage(self.mean_path)
         ])
         return transform(image), y, aux_label
 

@@ -49,17 +49,17 @@ def pre_train_encoder(
             encoder.zero_grad(); loss.backward();
             optimizer.step()
 
-            with torch.no_grad():
-                train_losses.append(loss.item())
-                train_acc.append(calculate_accuracy(out, labels))
-                dev_loss, dev_acc = evaluate_encoder(encoder, dev_data_loader)
-                dev_losses.append(dev_loss); dev_accs.append(dev_acc)
-                if (i+1)%5 == 0:
-                    print("==== Performance Check === ")
-                    print("\t Train Loss = ", loss.item())
-                    print("\t Dev Loss = ", dev_loss)
-                    print("\t Train BLEU = ", train_acc)
-                    print("\t Dev BLEU = ", dev_acc)
+        with torch.no_grad():
+            train_losses.append(loss.item())
+            train_acc.append(calculate_accuracy(out, labels))
+            dev_loss, dev_acc = evaluate_encoder(encoder, dev_data_loader)
+            dev_losses.append(dev_loss); dev_accs.append(dev_acc)
+            if (i+1)%5 == 0:
+                print("==== Performance Check === ")
+                print("\t Train Loss = ", loss.item())
+                print("\t Dev Loss = ", dev_loss)
+                print("\t Train Acc = ", train_acc[-1])
+                print("\t Dev Acc = ", dev_acc)
 
     return (train_losses, dev_losses), (train_acc, dev_accs)
 
@@ -70,7 +70,7 @@ def calculate_encoder_loss(preds, truth):
 def calculate_accuracy(preds, truth):
     sigmoid = torch.nn.Sigmoid()
     preds = torch.tensor([0.0 if i < 0.5 else 1.0 for i in sigmoid(preds)])
-    return ((preds == truth).sum() / len(truth)).item()
+    return (float((preds == truth).sum())/len(truth))
 
 def evaluate_encoder(encoder, dev_data_loader):
     losses = []; acc = []

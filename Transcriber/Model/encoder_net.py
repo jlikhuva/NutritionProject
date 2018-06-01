@@ -33,7 +33,7 @@ class EncoderNet(nn.Module):
             nn.LeakyReLU(inplace=True),
         )
         self.regressor = nn.Sequential(
-            nn.Linear(16*32*32, 3*2),
+            nn.Linear(16*16*16, 3*2),
         )
         self.regressor[-1].weight.data.zero_()
         self.regressor[-1].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
@@ -61,7 +61,7 @@ class EncoderNet(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
         )
-        self.fc = nn.Linear(4*4*32, 100)
+        self.fc = nn.Linear(2*2*32, 100)
 
         self.auxilary = nn.Linear(100, 1)
         self._init_some_parameters()
@@ -76,7 +76,7 @@ class EncoderNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
-        transformed_x = self.stn_forward(x)
+        transformed_x = x #self.stn_forward(x)
         encoding = self._run_block_two(self._run_block_one(transformed_x))
         encoding = self.encoding_network(encoding)
         encoding = encoding.reshape(encoding.shape[0], -1)

@@ -21,7 +21,7 @@ class EncoderNet(nn.Module):
         self.p = p
         self.yolo_weights = h5py.File(yolo_weights_path, 'r')
 
-
+        '''
         self.localization_network = nn.Sequential(
             nn.Conv2d(3, 8, kernel_size=5, padding=2, stride=2),
             nn.BatchNorm2d(8),
@@ -37,7 +37,7 @@ class EncoderNet(nn.Module):
         )
         self.regressor[-1].weight.data.zero_()
         self.regressor[-1].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
-
+        '''
         self.encoding_network = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(32),

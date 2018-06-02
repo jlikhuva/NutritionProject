@@ -30,7 +30,7 @@ def pre_train_encoder(
 ):
     train_losses, dev_losses, train_acc, dev_accs = [], [], [], []
     best_loss = LARGE_NUMBER
-    if torch.cuda.device_count() > 1:
+    if restore or torch.cuda.device_count() > 1:
         encoder = torch.nn.DataParallel(encoder)
     if restore:
         restore_loc = os.path.join('../Data/FullData/', restore_path)
@@ -40,6 +40,7 @@ def pre_train_encoder(
         )
         encoder.load_state_dict(checkpoint['encoder'])
         best_loss = checkpoint['loss']
+
     encoder = encoder.to(device)
     for i in range(epochs):
         #with torch.no_grad(): _, _ = evaluate_encoder(encoder, dev_data_loader)
@@ -88,7 +89,6 @@ def evaluate_encoder(encoder, dev_data_loader):
     losses = []; acc = []
     for images, _, _, labels in dev_data_loader:
         _, _, out = encoder(images)
-        #print(out.shape, labels.shape)
         losses.append(calculate_encoder_loss(out, labels).item())
         acc.append(float(calculate_accuracy(out, labels)))
     return (
@@ -101,11 +101,12 @@ def train_transcriber(
     encoder, decoder, optimizer, train_data_loader,
     dev_data_loader, train_dataset, dev_dataset, epochs=1, restore=False,
     restore_path='best_transcription_model.tar',
-    scheduler=None, save=True
+    restore_enc_path ='best_encoder_model.tar',
+    scheduler=None, save=True, use_pre_trained_encoder=True
 ):
     train_losses, dev_losses, train_bleu, dev_bleu = [], [], [], []
     best_loss = LARGE_NUMBER
-    if torch.cuda.device_count() > 1:
+    if use_pre_trained_encoder or torch.cuda.device_count() > 1:
         encoder = torch.nn.DataParallel(encoder)
     if restore:
         restore_loc = os.path.join('../Data/FullData/', restore_path)
@@ -117,11 +118,18 @@ def train_transcriber(
         decoder.load_state_dict(checkpoint['decoder'])
         best_loss = checkpoint['loss']
 
+    if use_pre_trained_encoder and not restore:
+        restore_loc = os.path.join('../Data/FullData/', restore_enc_path)
+        checkpoint = torch.load(
+            restore_loc,
+            map_location=lambda storage, loc: storage
+        )
+        encoder.load_state_dict(checkpoint['encoder'])
+
     encoder = encoder.to(device)
     decoder = decoder.to(device)
     for i in range(epochs):
         for images, captions, lengths, aux_labels in tqdm(train_data_loader):
-            # print(aux_labels)
             outputs, targets, train_encodings, true_captions, class_ = (
                 forward(images, captions, lengths, encoder, decoder)
             )
@@ -199,7 +207,7 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
             true_caption = get_words(truth, train_dataset)
             generated_caption = get_words(predicted, dev_dataset)
             bleu_scores.append(sentence_bleu(
-                true_caption, generated_caption,
+                true_caption[1:], generated_caption,
                 smoothing_function=smoothing_func
             ))
             log.write(' '.join(true_caption)); log.write('\n')
@@ -216,7 +224,7 @@ def get_words(indexes, dataset):
         if word == '<end>': break
     return words
 
-def calculate_loss(y_hat, y_truth, aux_y_hat, aux_y, lambdah=1.5):
+def calculate_loss(y_hat, y_truth, aux_y_hat, aux_y, lambdah=0.5):
     loss_function = nn.CrossEntropyLoss()
     aux_loss_function = nn.BCEWithLogitsLoss()
     aux_y_hat = aux_y_hat.to(device); aux_y = aux_y.to(device)

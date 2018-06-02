@@ -42,7 +42,8 @@ class DecoderNet(nn.Module):
     def sample(self, features, states=None):
         """Generate captions for given image features using greedy search."""
         sampled_ids = []
-        inputs = torch.zeros(features.shape[0], 1, 100).to(device)
+        START = self.word_vectors[621].expand((features.shape[0], 1, 100))
+        inputs = START.to(device)
         features = features.unsqueeze(1).expand(inputs.shape)
         embeddings = torch.cat((features, inputs), -1)
 

@@ -42,6 +42,7 @@ def pre_train_encoder(
         best_loss = checkpoint['loss']
     encoder = encoder.to(device)
     for i in range(epochs):
+        #with torch.no_grad(): _, _ = evaluate_encoder(encoder, dev_data_loader)
         for images, _, _, labels in tqdm(train_data_loader):
             images = images.to(device, dtype=dtype)
             _, _, out = encoder(images)
@@ -75,7 +76,7 @@ def pre_train_encoder(
 def calculate_encoder_loss(preds, truth):
     truth = truth.to(device)
     criterion = nn.BCEWithLogitsLoss()
-    return criterion(preds.squeeze(), truth)
+    return criterion(preds.squeeze(dim=1), truth)
 
 def calculate_accuracy(preds, truth):
     truth = truth.to(device)
@@ -87,6 +88,7 @@ def evaluate_encoder(encoder, dev_data_loader):
     losses = []; acc = []
     for images, _, _, labels in dev_data_loader:
         _, _, out = encoder(images)
+        #print(out.shape, labels.shape)
         losses.append(calculate_encoder_loss(out, labels).item())
         acc.append(float(calculate_accuracy(out, labels)))
     return (

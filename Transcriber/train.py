@@ -228,7 +228,7 @@ def get_words(indexes, dataset):
         if word == '<end>': break
     return words
 
-def calculate_loss(seq_loss,  aux_y_hat, aux_y, lambdah=0.5):
+def calculate_loss(seq_loss,  aux_y_hat, aux_y, lambdah=0.75):
     aux_loss_function = nn.BCEWithLogitsLoss()
     aux_y_hat = aux_y_hat.to(device); aux_y = aux_y.to(device)
     return seq_loss + lambdah*aux_loss_function(aux_y_hat.squeeze(), aux_y)

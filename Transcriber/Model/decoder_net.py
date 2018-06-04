@@ -12,7 +12,7 @@ else:
 class DecoderNet(nn.Module):
     def __init__(
         self, word_vectors, output_size, embed_size, hidden_size=1024,
-        dropout_keep_prob=1, max_length=110, num_layers=3
+        dropout_keep_prob=1, max_length=110, num_layers=4
     ):
         super(DecoderNet, self).__init__()
         self.embed = nn.Embedding(output_size, embed_size)
@@ -31,7 +31,7 @@ class DecoderNet(nn.Module):
     # Foward and sample stolen from https://github.com/yunjey/pytorch-tutorial
     def forward(self, features, captions, lengths, teacher_forcing_ratio=0.5):
         """Decode image feature vectors and generate captions."""
-        use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
+        # use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
         loss = 0.0;
         embeddings = self.embed(captions)
         features = features.unsqueeze(1).expand(embeddings.shape)
@@ -39,6 +39,7 @@ class DecoderNet(nn.Module):
 
         states = None; weights = torch.ones(self.output_size); weights[622] = 0
         for t in range(embeddings.shape[1]):
+            use_teacher_forcing = True
             if t == 0: inputs = embeddings[:, t, :].unsqueeze(1)
             hiddens, states = self.gru(inputs, states)
             cur_output = self.linear(hiddens.squeeze(1))

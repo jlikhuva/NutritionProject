@@ -55,10 +55,10 @@ class TranscriptionDataset(Dataset):
     ):
         self.cur_split_images = np.load(data_path).item()[split]
         if debug:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-2:]]
-            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:2]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-5:]]
+            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:5]]
         else:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-100:]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:500]]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[-500:]]
 
         shuffle(self.images)
@@ -118,8 +118,9 @@ def collate_fn(data):
     images, captions, aux_labels = zip(*data)
     images = torch.stack(images, 0)
     lengths = [len(caption) for caption in captions]
-    targets = torch.zeros(len(captions), max(lengths)).long()
+    targets = torch.from_numpy(np.full((len(captions), max(lengths)), 622))
     for i, caption in enumerate(captions):
         end = lengths[i]
         targets[i, :end] = caption[:end]
+
     return images, targets, lengths, torch.Tensor(aux_labels)

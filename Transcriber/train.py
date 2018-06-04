@@ -211,7 +211,7 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
             true_caption = get_words(truth, train_dataset)
             generated_caption = get_words(predicted, dev_dataset)
             bleu_scores.append(sentence_bleu(
-                true_caption[1:], generated_caption,
+                true_caption, generated_caption,
                 smoothing_function=smoothing_func
             ))
             log.write(' '.join(true_caption)); log.write('\n')
@@ -228,7 +228,7 @@ def get_words(indexes, dataset):
         if word == '<end>': break
     return words
 
-def calculate_loss(seq_loss,  aux_y_hat, aux_y, lambdah=0.5):
+def calculate_loss(seq_loss,  aux_y_hat, aux_y, lambdah=0.1):
     aux_loss_function = nn.BCEWithLogitsLoss()
     aux_y_hat = aux_y_hat.to(device); aux_y = aux_y.to(device)
     return seq_loss + lambdah*aux_loss_function(aux_y_hat.squeeze(), aux_y)

@@ -211,7 +211,7 @@ def calculate_bleu_score(decoder, features_batch, true_captions, train_dataset, 
             true_caption = get_words(truth, train_dataset)
             generated_caption = get_words(predicted, dev_dataset)
             bleu_scores.append(sentence_bleu(
-                true_caption[1:], generated_caption,
+                true_caption, generated_caption,
                 smoothing_function=smoothing_func
             ))
             log.write(' '.join(true_caption)); log.write('\n')

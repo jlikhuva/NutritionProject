@@ -17,13 +17,13 @@ class DecoderNet(nn.Module):
         super(DecoderNet, self).__init__()
         self.embed = nn.Embedding(output_size, embed_size)
         self.gru = nn.GRU(
-            2*embed_size, hidden_size, num_layers, batch_first=True,
+            (embed_size + 3*32*32), hidden_size, num_layers, batch_first=True,
         )
         self.linear = nn.Linear(hidden_size, output_size)
         self.max_length = max_length
         self.word_vectors = word_vectors
         self.output_size = output_size
-        self._init()
+        # self._init()
 
     def _init(self):
         self.embed.weight.data = self.word_vectors
@@ -33,8 +33,9 @@ class DecoderNet(nn.Module):
         """Decode image feature vectors and generate captions."""
         # use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
         loss = 0.0;
-        embeddings = self.embed(captions)
-        features = features.unsqueeze(1).expand(embeddings.shape)
+        embeddings = self.embed(captions); features = features.unsqueeze(1)
+        # print(embeddings.shape, features.shape)
+        features = features.expand(embeddings.shape[0], embeddings.shape[1], features.shape[-1])
         embeddings = torch.cat((features, embeddings), -1)
 
         states = None; weights = torch.ones(self.output_size).to(device); weights[622] = 0
@@ -61,9 +62,9 @@ class DecoderNet(nn.Module):
         """Generate captions for given image features using greedy search."""
         sampled_ids = []
         START = self.word_vectors[621].expand((features.shape[0], 1, 100))
-        inputs = START.to(device)
-        features = features.unsqueeze(1).expand(inputs.shape)
-        embeddings = torch.cat((features, inputs), -1)
+        embeddings = START.to(device); features = features.unsqueeze(1)
+        features = features.expand(embeddings.shape[0], embeddings.shape[1], features.shape[-1])
+        embeddings = torch.cat((features, embeddings), -1)
 
         for i in range(self.max_length):
             hiddens, states = self.gru(embeddings, states)       # hiddens: (batch_size, 1, hidden_size)

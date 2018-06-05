@@ -1,18 +1,12 @@
-<start> { num_servings : 4 serving_size : 7 9 ml calories_per_serving : 1 4 0 calories_from_fat : n/a total_fat : 1 4 g sat_fat : 1 2 g trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 1 0 mg potassium : n/a total_carb : 5 g dietary_fiber : 4 g total_sugar : 2 g added_sugar : 0 g protein : 1 g } <end>
-<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 4 g dietary_fiber : 0 g total_sugar : 1 g added_sugar : n/a protein : 0 g } <end>
+<start> [ wheat flour niacin reduced iron thiamine mononitrate riboflavin folic acid palm oil palm olein oil sesame seed oil beef fat beta carotene color caramel color citric acid coconut palm sugar dextrin dextrose disodium guanylate disodium nitrate disodium succinate dried cabbage flake dried cilantro flake dried green chili dried bell pepper dried shrimp egg white garlic garlic powder modified corn protein hydrolyzed soy protein lactose lemongrass lime juice maltodextrin natural flavor onion powder potassium chloride powdered chicken powder krill shallot silicon dioxide sodium benzoate sodium nitrate sodium phosphate sodium tripolyphosphate soybean spice soybean color succinic acid TBHQ tocopherol water ] <end>
+g : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :
 			==================
-<start> { num_servings : 1 3 serving_size : 2 4 0 ml calories_per_serving : 0 calories_from_fat : n/a total_fat : 0 g sat_fat : n/a trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 0 mg potassium : n/a total_carb : 0 g dietary_fiber : n/a total_sugar : 0 g added_sugar : n/a protein : 0 g } <end>
-<start> water ] <end>
+<start> { num_servings : 4 serving_size : 7 9 ml calories_per_serving : 1 4 0 calories_from_fat : n/a total_fat : 1 4 g sat_fat : 1 2 g trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 1 0 mg potassium : n/a total_carb : 5 g dietary_fiber : 4 g total_sugar : 2 g added_sugar : 0 g protein : 1 g } <end>
+: : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :
 			==================
 <start> { num_servings : 2 serving_size : 2 4 0 ml calories_per_serving : 0 calories_from_fat : n/a total_fat : 0 g sat_fat : n/a trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 3 0 mg potassium : n/a total_carb : 0 g dietary_fiber : n/a total_sugar : 0 g added_sugar : n/a protein : 0 g } <end>
-<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 1 0 calories_from_fat : n/a total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : 4 0 0 mg total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 2 4 g added_sugar : 0 g protein : 1 g } <end>
+: : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :
 			==================
 <start> [ carbonated water natural flavor grapefruit juice concentrate citric acid potassium benzoate potassium sorbate acacia gum sucralose green tea ester gum calcium disodium EDTA magnesium sulfate calcium chloride niacinamide d-calcium pantothenate red 4 0 pyridoxine hydrochloride biotin cholecalciferol cyanocobalamin ] <end>
-<start> [ tomato food starch sugar salt tripotassium phosphate mixed tocopherols ] <end>
-			==================
-<start> [ water kombucha culture cane sugar lemon juice ginger juice ashwagandha lactobacillus rhamnosus ] <end>
-<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
-			==================
-<start> [ water coconut cream guar gum ] <end>
-<start> [ tea water high fructose corn syrup honey citric acid natural flavor sodium flavor sunflower oil sunflower oil magnesium phosphate dipotassium phosphate cellulose gum cellulose gel maltodextrin triglycerides potassium chloride sodium hexametaphosphate carrageenan acesulfame potassium potassium citrate ascorbic acid sodium phosphate sucralose vitamin A palmitate vitamin D3 ] <end>
+: : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :
 			==================

@@ -1,0 +1,120 @@
+<start> { num_servings : 2 8 serving_size : 4 0 g calories_per_serving : 1 6 0 calories_from_fat : 4 0 total_fat : 4 . 5 g sat_fat : 1 . 5 g trans_fat : 0 g poly_fat : 1 g mono_fat : 2 g cholesterol : 0 mg sodium : 4 1 0 mg potassium : 6 0 mg total_carb : 2 5 g dietary_fiber : 1 g total_sugar : 1 g added_sugar : n/a protein : 3 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 5 total_fat : 4 . 5 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 1 3 g added_sugar : n/a protein : 1 4 g } <end>
+			==================
+<start> { num_servings : 7 serving_size : 3 0 g calories_per_serving : 1 3 0 calories_from_fat : 4 5 total_fat : 4 . 5 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 2 0 0 mg potassium : 2 7 0 mg total_carb : 2 1 g dietary_fiber : 2 g total_sugar : 1 g added_sugar : n/a protein : 2 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 5 total_fat : 4 . 5 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 1 3 g added_sugar : n/a protein : 1 4 g } <end>
+			==================
+<start> { num_servings : 3 serving_size : 1 2 8 g calories_per_serving : 2 5 0 calories_from_fat : 6 0 total_fat : 7 g sat_fat : 3 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 3 5 mg sodium : 2 4 0 mg potassium : n/a total_carb : 3 7 g dietary_fiber : 1 g total_sugar : 1 2 g added_sugar : n/a protein : 1 0 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 ml calories_per_serving : 1 4 0 calories_from_fat : 1 0 g sat_fat : 1 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 2 5 0 mg potassium : n/a total_carb : 2 2 g dietary_fiber : 0 g total_sugar : 2 3 g added_sugar : n/a protein : 4 g } <end>
+			==================
+<start> { num_servings : n/a serving_size : 1 bottle calories_per_serving : 4 1 0 calories_from_fat : 7 0 total_fat : 8 g sat_fat : 1 . 5 g trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : 1 0 mg sodium : 4 5 0 mg potassium : 2 4 0 mg total_carb : 5 3 g dietary_fiber : 4 g total_sugar : 4 7 g added_sugar : n/a protein : 3 2 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 5 total_fat : 4 . 5 g sat_fat : 1 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 1 3 g added_sugar : n/a protein : 1 4 g } <end>
+			==================
+<start> { num_servings : 1 0 serving_size : 5 5 g calories_per_serving : 2 1 0 calories_from_fat : 5 0 total_fat : 6 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 1 5 mg potassium : n/a total_carb : 3 6 g dietary_fiber : 3 g total_sugar : 1 1 g added_sugar : n/a protein : 4 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 4 g dietary_fiber : 0 g total_sugar : 1 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 7 serving_size : 5 5 g calories_per_serving : 2 3 0 calories_from_fat : 5 0 total_fat : 5 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 4 0 mg potassium : n/a total_carb : 4 2 g dietary_fiber : 3 g total_sugar : 1 2 g added_sugar : n/a protein : 5 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 0 total_fat : 4 . 5 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 1 0 g added_sugar : n/a protein : 1 g } <end>
+			==================
+<start> { num_servings : 4 serving_size : 2 4 0 ml calories_per_serving : 1 5 calories_from_fat : n/a total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : 0 g mono_fat : 0 g cholesterol : 0 mg sodium : 4 1 0 mg potassium : 3 0 mg total_carb : 1 g dietary_fiber : 0 g total_sugar : 0 g added_sugar : 0 g protein : 2 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 4 g dietary_fiber : 0 g total_sugar : 1 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 2 0 serving_size : 4 0 g calories_per_serving : 1 4 0 calories_from_fat : n/a total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : 3 5 0 mg total_carb : 3 4 g dietary_fiber : 2 g total_sugar : 2 4 g added_sugar : 0 g protein : 1 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 4 g dietary_fiber : 0 g total_sugar : 1 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 4 . 5 serving_size : 3 0 g calories_per_serving : 1 6 0 calories_from_fat : 7 0 total_fat : 8 g sat_fat : 4 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 5 mg sodium : 4 0 mg potassium : n/a total_carb : 2 1 g dietary_fiber : 0 g total_sugar : 1 3 g added_sugar : n/a protein : 1 g } <end>
+<start> sunflower oil sunflower oil salt ] <end>
+			==================
+<start> { num_servings : 5 serving_size : 1 1 2 g calories_per_serving : 2 4 0 calories_from_fat : 6 0 total_fat : 6 g sat_fat : 4 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 2 5 mg sodium : 3 0 mg potassium : n/a total_carb : 4 0 g dietary_fiber : 4 g total_sugar : 2 8 g added_sugar : n/a protein : 2 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 5 total_fat : 4 . 5 g sat_fat : 0 . 5 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 2 g total_sugar : 1 3 g added_sugar : n/a protein : 1 4 g } <end>
+			==================
+<start> { num_servings : 3 . 5 serving_size : 1 2 5 g calories_per_serving : 1 1 0 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 3 0 mg potassium : n/a total_carb : 2 0 g dietary_fiber : 6 g total_sugar : 2 g added_sugar : n/a protein : 7 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 0 g total_sugar : 2 3 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 5 serving_size : 8 0 ml calories_per_serving : 1 2 0 calories_from_fat : 1 0 0 total_fat : 1 1 g sat_fat : 1 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 2 5 mg potassium : n/a total_carb : 2 g dietary_fiber : 0 g total_sugar : 2 g added_sugar : n/a protein : 1 g } <end>
+rice starch wheat flour salt ] <end>
+			==================
+<start> { num_servings : 6 serving_size : 3 0 g calories_per_serving : 1 3 0 calories_from_fat : 4 5 total_fat : 5 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 2 3 0 mg potassium : n/a total_carb : 2 1 g dietary_fiber : 2 g total_sugar : 4 g added_sugar : n/a protein : 1 g } <end>
+<start> { num_servings : 4 serving_size : 1 4 0 g calories_per_serving : 1 4 0 calories_from_fat : 4 0 total_fat : 4 . 5 g sat_fat : 0 g trans_fat : 0 g mono_fat : 2 g cholesterol : 1 5 mg sodium : 2 5 0 mg potassium : 5 7 0 mg total_carb : 1 5 g dietary_fiber : 3 g total_sugar : 4 g added_sugar : n/a protein : 3 g } <end>
+			==================
+<start> { num_servings : 3 serving_size : 3 0 g calories_per_serving : 1 6 0 calories_from_fat : 1 1 0 total_fat : 1 3 g sat_fat : 1 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 1 4 g dietary_fiber : 3 g total_sugar : 9 g added_sugar : n/a protein : 2 g } <end>
+starch wheat flour niacin ferrous sulfate thiamine mononitrate riboflavin folic acid enzymes extract onions tomato paste celery onion roasted beef beef stock concentrate yeast extract ] <end>
+			==================
+<start> { num_servings : 3 0 serving_size : 1 2 g calories_per_serving : 4 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : 0 g mono_fat : n/a cholesterol : 0 mg sodium : 1 4 0 mg potassium : n/a total_carb : 5 g dietary_fiber : 1 g total_sugar : 2 g added_sugar : n/a protein : 6 g } <end>
+<start> { num_servings : 4 serving_size : 1 0 g calories_per_serving : 4 0 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 mg potassium : n/a total_carb : 2 4 g dietary_fiber : 0 g total_sugar : 2 3 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 3 serving_size : 2 4 0 ml calories_per_serving : 9 0 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 1 0 mg potassium : n/a total_carb : 2 3 g dietary_fiber : 0 g total_sugar : 2 3 g added_sugar : n/a protein : 0 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 4 g dietary_fiber : 0 g total_sugar : 1 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> { num_servings : 1 1 serving_size : 3 0 g calories_per_serving : 1 4 0 calories_from_fat : 5 0 total_fat : 6 g sat_fat : 1 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 2 1 g dietary_fiber : 2 g total_sugar : 7 g added_sugar : n/a protein : 3 g } <end>
+starch wheat flour canola oil safflower oil sunflower oil spice ] <end>
+			==================
+<start> { num_servings : 6 serving_size : 3 5 5 ml calories_per_serving : 1 4 0 calories_from_fat : n/a total_fat : 0 g sat_fat : n/a trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 5 0 mg potassium : n/a total_carb : 3 9 g dietary_fiber : n/a total_sugar : 3 8 g added_sugar : n/a protein : 0 g } <end>
+starch rice flour niacin ferrous sulfate thiamine mononitrate riboflavin folic acid enzymes extract ] <end>
+			==================
+<start> { num_servings : 2 serving_size : 2 4 0 g calories_per_serving : 0 calories_from_fat : n/a total_fat : 0 g sat_fat : n/a trans_fat : n/a poly_fat : n/a mono_fat : n/a cholesterol : n/a sodium : 0 mg potassium : n/a total_carb : 0 g dietary_fiber : n/a total_sugar : 0 g added_sugar : n/a protein : 0 g } <end>
+<start> { num_servings : 4 serving_size : 3 0 g calories_per_serving : 1 5 calories_from_fat : 0 total_fat : 0 g sat_fat : 0 g trans_fat : 0 g poly_fat : n/a mono_fat : n/a cholesterol : 0 mg sodium : 0 mg potassium : n/a total_carb : 2 0 g dietary_fiber : 0 g total_sugar : 1 7 g added_sugar : n/a protein : 0 g } <end>
+			==================
+<start> [ oats oat flour invert cane syrup evaporated cane juice peanut butter canola oil strawberries white rice flour tapioca starch rice bran apple powder pineapple juice concentrate pear juice concentrate apple juice concentrate peach juice concentrate peanut flour peanut oil glycerin natural flavor citric acid pectin locust bean gum salt baking soda red cabbage extract annatto ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ chicken breast tomatoes tomato juice salt onions water canola oil nonfat milk cream nonfat dry milk spice garlic cashews lemon juice concentrate butter sugar potato starch dextrose dextrin oleoresin paprika ghee fenugreek cilantro turmeric vinegar mango powder rice cumin seeds ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ corn meal evaporated cane syrup brown rice canola oil sunflower seeds raisins almonds sesame seed flax seed coconut walnuts hazelnuts cranberries sugar sunflower oil corn starch brazil nut apricot rice bran extract natural flavor pecans caramel color salt ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ modified food starch maltodextrin disodium phosphate calcium sulfate titanium dioxide monoglycerides diglycerides gallate citric acid salt xanthan gum acesulfame potassium aspartame natural flavor artificial flavor triacetin yellow 5 yellow 6 ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ carbonated water sucrose glucose citric acid taurine sodium citrate natural flavor artificial flavor caffeine artificial color niacinamide wood raisin glycerol esters sucrose acetate isobutyrate pyridoxine hydrochloride calcium pantothenate vitamin B12 ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ water wheat flour egg whites eggs corn starch canola oil soy lecithin dextrose salt milk salt enzyme calcium chloride sugar niacin iron thiamine mononitrate riboflavin folic acid vanilla extract ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ water erythritol stevia leaf extract coconut water concentrate natural flavor potassium citrate citric acid tea extract salt coffeefruit extract malic acid d-alpha tocopherol ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ chia seeds water agave lemon juice coconut water concentrate natural flavor passionfruit juice concentrate mango puree mixed carotene citric acid ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ sprouted brown rice cane syrup coconut flakes salt brown rice flour coconut type flavor lemongrass ] <end>
+<start> [ wheat flour niacin ferrous sulfate thiamine mononitrate riboflavin folic acid salt carrot onion tomato red beans black beans potatoes modified corn starch corn hydrolyzed soy protein celery sugar green beans spice citric acid disodium inosinate disodium guanylate beef stock caramel colorparsley basil cabbage yeast extract chicken fat garlic spinach natural flavor beef fat ] <end>
+			==================
+<start> [ almonds sunflower seeds flax seeds tapioca cassava sunflower oil salt onion garlic rosemary extract ] <end>
+<start> [ wheat flour niacin ferrous sulfate thiamine mononitrate riboflavin folic acid salt carrot onion tomato red beans black beans potatoes modified corn starch corn hydrolyzed soy protein celery sugar green beans spice citric acid disodium inosinate disodium guanylate beef stock caramel colorparsley basil cabbage yeast extract chicken fat garlic spinach natural flavor beef fat ] <end>
+			==================
+<start> [ honey canola oil banana coconut oil sugar natural flavor walnuts cashews almonds pistachios ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ tea water cane sugar lemon juice concentrate lemon extract citric acid ascorbic acid ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ water mango sugar cream corn syrup milk powder citric acid annatto ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ black tea water high fructose corn syrup citric acid natural flavor ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ water mango sugar cream corn syrup milk powder citric acid annatto ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ semolina niacin ferrous sulfate thiamin mononitrate riboflavin folic acid ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ jalapeno peppers water calcium chloride citric acid salt ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ black olives water salt ferrous gluconate ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ erythritol rebiana natural flavor ] <end>
+<start> [ water tomato paste milk skim milk yogurt cultures cream garlic ginger puree corn starch spice cane sugar salt lemon juice concentrate turmeric xanthan gum citric acid chili pepper ] <end>
+			==================
+<start> [ water brown rice ] <end>
+<start> [ water coconut water concentrate watermelon flavor salt lime flavor stevia leaf extract ] <end>
+			==================
+<start> [ sodium bicarbonate ] <end>
+<start> [ water coconut onion carrot celery tomato spice rosemary extract cider vinegar ] <end>
+			==================

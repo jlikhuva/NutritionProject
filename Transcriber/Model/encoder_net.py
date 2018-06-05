@@ -37,28 +37,27 @@ class EncoderNet(nn.Module):
         )
         self.regressor[-1].weight.data.zero_()
         self.regressor[-1].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
-        
+
         self.encoding_network = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(32),
             nn.Dropout(p=p, inplace=True),
-            nn.MaxPool2d(2, 2),
+            # nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
             nn.Conv2d(32, 64, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(64),
             nn.Dropout(p=p, inplace=True),
-            nn.MaxPool2d(2, 2),
+            # nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
-
             nn.Conv2d(64, 128, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(128),
             nn.Dropout(p=p, inplace=True),
-            nn.MaxPool2d(2, 2),
+            # nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
             nn.Conv2d(128, 32, kernel_size=1, padding=0, stride=1),
             nn.BatchNorm2d(32),
             nn.Dropout(p=p, inplace=True),
-            nn.MaxPool2d(2, 2),
+            # nn.MaxPool2d(2, 2),
             nn.LeakyReLU(inplace=True),
         )
         self.fc = nn.Linear(2*2*32, 100)
@@ -80,10 +79,11 @@ class EncoderNet(nn.Module):
         encoding = self._run_block_two(self._run_block_one(transformed_x))
         encoding = self.encoding_network(encoding)
         encoding = encoding.reshape(encoding.shape[0], -1)
-        encoding = self.fc(encoding)
 
-        class_ = self.auxilary(encoding)
-        return encoding, None, class_
+        # encoding = self.fc(encoding)
+        # class_ = self.auxilary(encoding)
+        print(encoding.shape)
+        return encoding, None, None
 
     def stn_forward(self, x):
         theta_prime = self.localization_network(x)

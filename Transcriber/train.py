@@ -133,11 +133,10 @@ def train_transcriber(
     decoder = decoder.to(device)
     for i in range(epochs):
         for images, captions, lengths, aux_labels in tqdm(train_data_loader):
-            loss1, _, train_encodings, true_captions, class_ = (
+            loss1, _, train_encodings, true_captions, _ = (
                 forward(images, captions, lengths, encoder, decoder)
             )
-            loss1 = (sum(loss1) / sum(lengths))
-            loss = calculate_loss(loss1, class_, aux_labels)
+            loss = (sum(loss1) / sum(lengths))
             encoder.zero_grad(); decoder.zero_grad()
             loss.backward()
             optimizer.step()
@@ -176,22 +175,19 @@ def train_transcriber(
 def forward(images, captions, lengths, encoder, decoder):
     images = images.to(device=device, dtype=dtype)
     captions = captions.to(device=device)
-    # print('Captions shape = ', captions.shape)
-    # targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
-    encoding, _, class_ = encoder(images)
+    encoding, _, _ = encoder(images)
     loss = decoder(encoding, captions, lengths)
-    return loss, None, encoding, captions, class_
+    return loss, None, encoding, captions, None
 
 
 def evaluate_on_dev(loader, encoder, decoder, train_dataset, dev_dataset):
     encoder.eval(); decoder.eval()
     losses = []
     for images, captions, lengths, aux_labels in loader:
-        loss1, _, dev_encodings, true_captions, class_ = (
+        loss1, _, dev_encodings, true_captions, _ = (
             forward(images, captions, lengths, encoder, decoder)
         )
-        loss1 = (sum(loss1) / sum(lengths))
-        loss = calculate_loss(loss1, class_, aux_labels)
+        loss = (sum(loss1) / sum(lengths))
         losses.append(loss.item())
     dev_blu = calculate_bleu_score(decoder, dev_encodings, true_captions, train_dataset, dev_dataset, key='dev')
     encoder.train(); decoder.train()

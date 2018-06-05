@@ -58,8 +58,8 @@ class TranscriptionDataset(Dataset):
             self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[-2:]]
             self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:2]]
         else:
-            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:1000]]
-            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[:1000]]
+            self.images = [os.path.join(image_dir, '1_' + f) for f in self.cur_split_images[:500]]
+            self.images += [os.path.join(image_dir, '0_' + f) for f in self.cur_split_images[-500:]]
 
         shuffle(self.images)
 
